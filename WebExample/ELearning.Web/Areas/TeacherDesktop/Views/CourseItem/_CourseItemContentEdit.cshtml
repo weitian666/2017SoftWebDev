@@ -1,0 +1,162 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemContentVM
+@using ELearning.Web.Helpers
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="col-sm-8">
+            <div class="x_panel">
+                <div class="x_title">
+                    <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                    <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a href="~/Admin/CourseItem/CourseItemList/@Model.CourseID" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="courseItemContentEditor" class="x_content">
+                    <form id="boVM_CreateOrEdit" asp-area="Admin" asp-controller="@entityController" asp-action="CourseItemContentEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                        <!-- 隐藏的元素 -->
+                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseID" />
+                        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseName" />
+                        <input type="hidden" id="CourseItemID" name="CourseItemID" value="@Model.CourseItemID" />
+                        <input type="hidden" id="CourseItemName" name="CourseItemName" value="@Model.CourseItemName" />
+
+                        <!-- 页眉 -->
+                        <div class="item form-group">
+                            <label asp-for="HeadContent" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <input type="text" class="form-control col-md-7 col-xs-12" id="HeadContent" name="HeadContent" placeholder="请输入页眉内容" value="@Model.HeadContent" required>
+                            </div>
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <span asp-validation-for="HeadContent" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 名称 -->
+                        <div class="item form-group">
+                            <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <input type="text" class="form-control col-md-7 col-xs-12" col-md-10 col-xs-12" id="Name" name="Name" placeholder="请输入单元名称" value="@Model.Name" required>
+                            </div>
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 副标题 -->
+                        <div class="item form-group">
+                            <label asp-for="SecondTitle" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <input type="text" class="form-control col-md-7 col-xs-12" id="SecondTitle" name="SecondTitle" placeholder="请输入副标题" value="@Model.SecondTitle" required>
+                            </div>
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <span asp-validation-for="SecondTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 正文内容 -->
+                        <div class="item form-group">
+                            <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="正文内容...">@Model.Description</textarea>
+                            </div>
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 页脚 -->
+                        <div class="item form-group">
+                            <label asp-for="FootContent" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <input type="text" class="form-control col-md-7 col-xs-12" id="FootContent" name="FootContent" placeholder="请输入页脚内容" value="@Model.FootContent" required>
+                            </div>
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                <span asp-validation-for="FootContent" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="ln_solid"></div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button type="button" class="btn btn-primary" onclick="submitCreateOrEditForm()"><i class="fa fa-send"></i> 提交数据</button>
+                                <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                                <span class="text-info"> @Model.SaveStatus</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 上传图片管理 -->
+            @*<div class="x_panel">
+                <div class="x_title">
+                    <h2>图片文件</h2>
+                    <ul class="nav navbar-right panel_toolbox pull-right">
+                        <li>
+                            <button class="pull-right btn btn-primary" style="color:white" onclick="openImagesUploadModal('commonBusinessImagesSelectorModal', '@Model.Id')"> 添加 </button>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                 图片文件 -
+                <div class="x_content">
+                    <partial name="_CourseItemContentImage" model="@Model.ImageCollection" />
+                </div>
+            </div>*@
+
+        </div>
+
+        <div class="col-sm-4">
+            <!-- 上传视频文件 -->
+            <div class="x_panel">
+                <!-- 视频文件 --->
+                <div class="x_title">
+                    <h2>视频文件</h2>
+                    <ul class="nav navbar-right panel_toolbox pull-right">
+                        <li>
+                            <button class="pull-right btn btn-primary" style="color:white" onclick="openVideoUploadModal('commonBusinessVideoesSelectorModal', '@Model.Id')"><i class="fa fa-plus"></i> 添加 </button>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content" id="courseItemContentVideo">
+                    <partial name="_CourseItemContentVideo" model="@Model.Video" />
+                </div>
+            </div>
+
+            <!-- 上传其他文件管理 -->
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>其它文件</h2>
+                    <ul class="nav navbar-right panel_toolbox pull-right">
+                        <li>
+                            <button class="pull-right btn btn-primary" style="color:white" onclick="openFileUploadModal('commonBusinessFilesSelectorModal', '@Model.Id')"><i class="fa fa-plus"></i> 添加 </button>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <!-- 其它文件 --->
+                <div class="x_content" id="courseItemContentFile">
+                    <partial name="_CourseItemContentFiles" model="@Model.FileCollection" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

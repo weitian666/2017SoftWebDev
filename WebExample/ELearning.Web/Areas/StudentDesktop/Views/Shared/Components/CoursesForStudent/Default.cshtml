@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ELearning.ViewModels.TeachingCourse.CoursesVM>
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<ul class="nav child_menu">
+    @foreach (var item in Model)
+    {
+        <li><a asp-area="StudentDesktop" asp-controller="Home" asp-action="CourseDetail" asp-route-id="@item.Id"><span style="font-size:15px">@item.Name</span> </a></li>
+    }
+</ul>

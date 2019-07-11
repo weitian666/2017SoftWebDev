@@ -1,0 +1,150 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseAuthorizationSelectorVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <div style="height:8px"></div>
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"] </span>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a asp-area="Admin" asp-controller="Course" asp-action="Index" style="color:dimgray"><i class="fa fa-cogs"></i> 退出管理 </a> &nbsp;
+                    </li>
+                </ul>
+                <div style="height:8px"></div>
+            </div>
+            <div class="x_content" id="mainWorkPlaceArea">
+                <partial name="_AuthorizationDetail" model="@Model" />
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 根据权限导航获取对应的权限清单 
+        function gotoAuthorizationTypeItemsList(id, authorizationType, tabName) {
+
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/AuthorizationTypeItemsList/' + id+"?authorizationType="+authorizationType,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById(tabName).innerHTML = data;
+
+            }).fail(function () {
+                alert("权限选择数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开课程访问授权清单
+        function gotoAuthorizationItemsList(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/AuthorizationItemsList/' + id,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("courseManagementTab").innerHTML = data;
+
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开课程访问授权配置维护管理
+        function gotoAuthorizationItemsListSelector(id,authorizationType,tabName) {
+            // 访问后台 AuthorizationItemsListSelector 方法，获取维护数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/AuthorizationItemsListSelector/' + id +"?authorizationType=" + authorizationType,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById(tabName).innerHTML = data;
+
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 将指定 id 的待选元素（用户或者用户组）添加到授权中，刷新选择器
+        function gotoProcessItemToAuthorization(id,itemId,isUser,isAdd, authorizationType,tabName){
+            // 访问后台 ProcessItemToAuthorization 方法，获取维护数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/ProcessItemToAuthorization/' + id + '?itemId=' + itemId+'&isUser='+isUser+'&isAdd='+isAdd +'&authorizationType='+authorizationType,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById(tabName).innerHTML = data;
+
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 移除授权清单元素
+        function gotoRemoveItemFromAuthorization(id, itemId, isUser, isAdd, authorizationType, tabName) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/RemoveItemFromAuthorization/' + id + '?itemId=' + itemId+'&isUser='+isUser+'&isAdd='+isAdd+'&authorizationType='+authorizationType,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById(tabName).innerHTML = data;
+
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        function goToBeAuthorizationedItemsList(id, authorizationType, tabName, keyword) {
+            // 访问后台 AuthorizationItemsListSelector 方法，获取维护数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/AuthorizationItemsListSelectorByKeyWord/' + id + "?authorizationType=" + authorizationType + "&keyword=" + keyword,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById(tabName).innerHTML = data;
+
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+    </script>
+}

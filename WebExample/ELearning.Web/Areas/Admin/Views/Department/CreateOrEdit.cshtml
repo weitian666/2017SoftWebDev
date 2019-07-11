@@ -1,0 +1,174 @@
+﻿@model ELearning.ViewModels.Organization.DepartmentVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="@entityController" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+
+                    <!-- 上级部门 - 带层次的下拉 -->
+                    <div class="item form-group">
+                        <label asp-for="ParentDepartmentId" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="ParentDepartmentId" name="ParentDepartmentId" aria-describedby="parentItemHelpBlock">
+                                @if (String.IsNullOrEmpty(Model.ParentDepartmentId))
+                                {
+                                    <option value="" disabled selected hidden>请选择上级节点，如果不选，则将当前节点作为自身的上级节点。</option>
+                                    <option value=""></option>
+                                }
+                                else
+                                {
+                                    @*<option value=""></option>*@
+                                }
+                                @foreach (var item in Model.ParentDepartmentItemCollection)
+                                {
+                                    if (item.ID == Model.ParentDepartmentId)
+                                    {
+                                        <option value="@item.ID" selected>@item.DisplayName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.DisplayName</option>
+                                    }
+                                }
+                            </select>
+                            <small id="parentItemHelpBlock" class="form-text text-muted">
+                                如果置空，意味着将当前编辑的部门作为最高级别的部门（根节点元素）使用。
+                            </small>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="ParentDepartmentId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 部门名称 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入角色组名称" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 部门编码 -->
+                    <div class="item form-group">
+                        <label asp-for="SortCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="SortCode" name="SortCode" placeholder="请输入角色组编码" value="@Model.SortCode" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="SortCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 归属组织 -->
+                    <div class="item form-group">
+                        <label asp-for="OrganizationId" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="OrganizationId" name="OrganizationId">
+                                <option value=""></option>
+                                @foreach (var item in Model.OrganizationItemCollection)
+                                {
+                                    if (item.ID == Model.OrganizationId)
+                                    {
+                                        <option value="@item.ID" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="OrganizationId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 部门种类-枚举下拉 -->
+                    <div class="item form-group">
+                        <label asp-for="DepartmentType" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="DepartmentTypeName" name="DepartmentTypeName">
+                                <option value=""></option>
+                                @foreach (var item in Model.DepartmentTypeItemCollection)
+                                {
+                                    if (item.Name == Model.DepartmentTypeName)
+                                    {
+                                        <option value="@item.ID" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="DepartmentType" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 简要说明 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 是否自动创建用户组 -->
+                    <div class="item form-group">
+                        <label asp-for="IsCreateRoleAuto" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-check" style="margin-top:8px">
+                                @if (Model.IsCreateRoleAuto)
+                                {
+                                    <input class="form-check-input" type="checkbox" value="true" id="IsCreateRoleAuto" name="IsCreateRoleAuto" checked>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" value="true" id="IsCreateRoleAuto" name="IsCreateRoleAuto">
+                                }
+                                <label class="form-check-label" for="IsCreateRoleAuto">如果勾选，则在保存数据时，系统自动创建或更新与名称相同的用户组。</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:6px">
+                            <span asp-validation-for="IsCreateRoleAuto" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

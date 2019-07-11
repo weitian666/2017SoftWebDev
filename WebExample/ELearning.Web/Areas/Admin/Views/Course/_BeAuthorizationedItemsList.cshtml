@@ -1,0 +1,43 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseAuthorizationSelectorVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+    var tabName = Model.AuthorizationType.ToString() + "_CourseAuthorizationTypeTab";
+}
+@*<div class="input-group">
+    <input type="text" id="keyword" class="form-control" placeholder="输入关键词..." value="">
+    <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" onclick="goToBeAuthorizationedItemsList($('@Model.CourseID','@Model.AuthorizationType','@tabName','#keyword').val())"><i class="fa fa-search"></i></button>
+    </span>
+</div>*@
+
+<span class="h5" style="color:dimgray;margin-top:10px"> 已选用户组和用户 </span>
+<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0">
+    <thead>
+        <tr>
+            <th width="60px" class="text-center">
+                @*<input type="checkbox" name="" id="" value="" class="custom-control-input flat" />
+                <a href="javascript:void()" onclick="('')"> <i class="fa fa-angle-double-left pull-left"></i> </a>*@
+            </th>
+            <th width="30px"></th>
+            <th>用户或角色组</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BeAuthorizationedItemCollection)
+        {
+        <tr>
+            <td class="text-center">
+                <input type="checkbox" name="" id="" value="" class="" />
+                <a href="javascript:void()" onclick="gotoProcessItemToAuthorization('@Model.CourseID','@item.Id','@item.IsUser','false','@Model.AuthorizationType','@tabName')"> <i class="fa fa-arrow-left pull-left"></i> </a>
+            </td>
+            <td align="center">
+                @if (item.IsUser)
+                {<i class="fa fa-user"></i> }
+                else
+                {<i class="fa fa-users"></i>}
+            </td>
+            <td> @item.Name </td>
+        </tr>
+        }
+    </tbody>
+</table>

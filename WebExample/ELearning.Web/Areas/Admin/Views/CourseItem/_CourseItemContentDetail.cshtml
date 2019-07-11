@@ -1,0 +1,69 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemContentVM
+@using ELearning.Web.Helpers
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="col-sm-12">
+                <!-- 处理页眉数据 -->
+                @if (!String.IsNullOrEmpty(Model.HeadContent))
+                {
+                    <div class="x_content">
+                        @Model.HeadContent
+                        <hr />
+                    </div>
+                }
+                <div class="x_title">
+                    <h3 class="text-center">@Model.Name</h3>
+                    @if (!String.IsNullOrEmpty(Model.SecondTitle))
+                    {
+                        <p class="text-center">@Model.SecondTitle</p>
+                    }
+                </div>
+                <div id="courseItemContentEditor" class="x_content">
+                    <div style="align-content:center">
+                        <video src="@Model.Video.VideoFilePath" controls width="720" style="clear:both;display:block;margin:auto"></video>
+                    </div>
+                    <hr />
+                    <div class="clearfix"></div>
+                    <div>
+                        @Html.SetHtml(@Model.Description)
+                    </div>
+                </div>
+                <hr />
+                <br /><br /><br />
+                @if (Model.FileCollection != null)
+                {
+                    if (Model.FileCollection.Count > 0)
+                    {
+                        <div class="x_title">
+                            <h4>附件</h4>
+                        </div>
+                        <table class="countries_list x_content">
+                            <tbody>
+                                @foreach (var item in Model.FileCollection)
+                                {
+                                    <tr>
+                                        <td><a href="../../@item.FilePath"> @item.FileName </a> </td>
+                                        <td class="fs15 fw700 text-right"></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+                <!-- 处理页脚数据 -->
+                @if (!String.IsNullOrEmpty(Model.FootContent))
+                {
+                    <div class="x_content text-center">
+                        <hr />
+                        @Model.FootContent
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

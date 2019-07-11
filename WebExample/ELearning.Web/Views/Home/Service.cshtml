@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<!-- 内容标题 -->
+<div class="page-header">
+    <h1 class="page-title">
+    服务介绍
+    </h1>
+</div>
+
+<!-- 内容 -->
+<div class="row">
+    <!-- 右侧导航 -->
+    <div class="col-lg-3 order-lg-1 mb-4">
+        <!-- 突出重点的导航 -->
+        <a href="#" class="btn btn-block btn-primary mb-6">
+            <i class="fe fe-github mr-2"></i>焦点导航示例
+        </a>
+        <!-- 根据目的的导航 -->
+        <div class="list-group list-group-transparent mb-0">
+            <a href="#" class="list-group-item list-group-item-action active"><span class="icon mr-3"><i class="fe fe-flag"></i></span>总体介绍</a>
+        </div>
+
+    </div>
+    <!-- 正文内容 -->
+    <div  class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+            <div class="text-wrap p-lg-6">
+                <h2 class="mt-0 mb-4">以下是示例的内容</h2>
+                <p>We’ve created this admin panel for everyone who wants to create any templates based on our ready components. Our mission is to deliver a user-friendly, clear and easy administration panel, that can be used by both, simple websites and sophisticated systems. The only requirement is a basic HTML and CSS knowledge—as a reward, you’ll be able to manage and visualize different types of data in the easiest possible way!</p>
+                <h3 id="setup-environment">Setup environment</h3>
+                <p>To use our build system and run our documentation locally, you’ll need a copy of Tabler’s source files and Node. Follow these steps:</p>
+                <ol>
+                <li><a href="https://nodejs.org/download/">Download and install Node.js</a>, which we use to manage our dependencies.</li>
+                <li>Navigate to the root <code class="highlighter-rouge">/tabler</code> directory and run <code class="highlighter-rouge">npm install</code> to install our local dependencies listed in <code class="highlighter-rouge">package.json</code>.</li>
+                <li>
+                    <p><a href="https://www.ruby-lang.org/en/documentation/installation/">Install Ruby</a>, install <a href="https://bundler.io/">Bundler</a> with <code class="highlighter-rouge">gem install bundler</code>, and finally run <code class="highlighter-rouge">bundle install</code>. This will install all Ruby dependencies, such as Jekyll and plugins.</p>
+                    <p><strong>Windows users:</strong> Read <a href="https://jekyllrb.com/docs/windows/">this guide</a> to get Jekyll up and running without problems.</p>
+                </li>
+                </ol>
+                <p>When completed, you’ll be able to run the various commands provided from the command line.</p>
+                <h3 id="build-tabler-locally">Build Tabler locally</h3>
+                <ol>
+                <li>From the root <code class="highlighter-rouge">/tabler</code> directory, run <code class="highlighter-rouge">npm run serve</code> in the command line.</li>
+                <li>Open <a href="http://localhost:4000">http://localhost:4000</a> in your browser, and voilà.</li>
+                <li>Any change in <code class="highlighter-rouge">/src</code> directory will build application and refresh the page.</li>
+                </ol>
+                <div class="alert alert-warning">
+                <strong>Warning!</strong> all changes made in <code>_site/</code> folder would be overwriten on application build.
+                </div>
+                <h3 id="bugs-and-feature-requests">Bugs and feature requests</h3>
+                <p>Have a bug or a feature request? <a href="https://github.com/tabler/tabler/issues/new">Please open a new issue</a>.</p>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

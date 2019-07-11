@@ -1,0 +1,46 @@
+﻿@{
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = ViewContext.RouteData.Values["action"].ToString();;
+    var returnUrl = "/" + controllerName + "/" + actionName;
+
+    var userName = ViewData["LoginUserName"] as string;
+
+    if (String.IsNullOrEmpty(userName))
+    {
+        <a class="nav-link" asp-controller="Account" asp-action="Logon" asp-route-returnUrl="@returnUrl">
+            <span class="avatar" style="background-image: url(/images/logon.png)"></span>
+            <span class="ml-2 d-none d-lg-block">
+                <span class="">登录系统</span>
+                @*<small class="text-muted d-block mt-1">欢迎到来</small>*@
+            </span>
+        </a>
+    }
+
+    else
+    {
+        <div class="dropdown">
+            <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                <span class="avatar" style="background-image: url(@ViewData["LoginUserAvatarPath"])"></span>
+                <span class="ml-2 d-none d-lg-block">
+                    <span class="">@userName</span>
+                    <small class="text-muted d-block mt-1">@ViewData["LoginUserRoleName"]</small>
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                <a class="dropdown-item" href="#">
+                    <i class="dropdown-icon fe fe-user"></i> 个人信息管理
+                </a>
+                <div class="dropdown-divider"></div>
+
+                <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    <i class="dropdown-icon fe fe-settings"></i> 后台数据管理中心
+                </a>
+           
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                    <i class="dropdown-icon fe fe-log-out"></i> 注销
+                </a>
+            </div>
+        </div>
+    }
+}

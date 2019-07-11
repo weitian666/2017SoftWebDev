@@ -1,0 +1,34 @@
+﻿@model ELearning.ViewModels.Common.LoginVM
+
+<form id="boVM_UserLoginForm" asp-area="" asp-controller="Home" asp-action="Login" class="form-horizontal">
+    <div>
+        <span class="text-danger field-validation-valid">@ViewData["LoginStatusString"]</span>
+    </div>
+
+    <!-- 普通文本输入 -->
+    <div class="item form-group">
+        <div class="">
+            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="请输入用户名" value="@Model.UserName" required>
+        </div>
+        <div class="" style="">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- 密码输入 -->
+    <div class="item form-group">
+        <div class="">
+            <input type="password" class="form-control" id="Password" name="Password" placeholder="请输入密码" value="@Model.Password" required>
+        </div>
+        <div class="">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="ln_solid"></div>
+    <div class="form-group">
+        <div class="">
+            <button type="button" class="btn btn-primary btn-small" onclick="submitUserLoginorm()">登录</button>
+            <a asp-area="" asp-controller="" asp-action="Register" class="btn btn-success btn-small">注册</a>
+        </div>
+    </div>
+</form>

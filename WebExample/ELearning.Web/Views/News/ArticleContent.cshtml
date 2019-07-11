@@ -1,0 +1,59 @@
+﻿@model ELearning.ViewModels.News.ArticleVM
+@using ELearning.Web.Helpers
+@{
+    Layout = "_Layout";
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<!-- 内容标题 -->
+<div class="row">
+    <!-- 右侧导航 -->
+    <div class="col-lg-3 order-lg-1 mb-4">
+        <!-- 突出重点的导航 -->
+        <a href="#" class="btn btn-block btn-primary mb-6">
+            <i class="fe fe-github mr-2"></i>焦点导航示例
+        </a>
+        <!-- 根据目的的导航 -->
+        <div class="list-group list-group-transparent mb-0">
+            <a href="#" class="list-group-item list-group-item-action active"><span class="icon mr-3"><i class="fe fe-flag"></i></span>总体介绍</a>
+        </div>
+
+    </div>
+    <!-- 正文内容 -->
+    <div  class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-wrap p-lg-6">
+                    <h2 class="mt-0 mb-4 text-center">@Model.Name</h2>
+                    <hr />
+                    @if (!String.IsNullOrEmpty(Model.ArticleSecondTitle))
+                    {
+                        <p class="text-center text-cyan">@Model.ArticleSecondTitle</p>
+                        @if (!String.IsNullOrEmpty(Model.Description))
+                        {
+                            <p>@Model.Description</p>
+                        }
+                        <hr />
+                    }
+                    @Html.SetHtml(@Model.ArticleContent)
+
+                    @if (Model.FileCollection != null)
+                    {
+                        if (Model.FileCollection.Count() > 0)
+                        {
+                            <table class="table card-table table-condensed table-striped">
+                                @foreach (var item in Model.FileCollection)
+                                {
+                                    <tr>
+                                        <td><a href="@item.FilePath" target="_blank"> @item.FileName </a></td>
+                                    </tr>
+                                }
+                            </table> 
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

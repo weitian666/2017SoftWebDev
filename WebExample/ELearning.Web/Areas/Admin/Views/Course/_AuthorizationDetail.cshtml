@@ -1,0 +1,54 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseAuthorizationSelectorVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <!-- required for floating -->
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs tabs-left">
+            @foreach (var item in Model.AuthorizationTypeForCourseCollection)
+            {
+                var activeStatus = "";
+                var tabName = item.AuthorizationType.ToString() + "_CourseAuthorizationTypeTab";
+                if (item.IsActive)
+                {
+                    activeStatus = "active";
+                }
+
+                <li class="@activeStatus">
+                    <a href="#@tabName" data-toggle="tab" onclick="gotoAuthorizationTypeItemsList('@Model.CourseID','@item.AuthorizationType.ToString()','@tabName')">
+                        <div class="">
+                            <h2>@item.AuthorizationTypeDisplayName</h2>
+                            <p>@item.AuthorizationDescription</p>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-xs-9">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            @foreach (var item in Model.AuthorizationTypeForCourseCollection)
+            {
+                var activeStatus = "";
+                var tabName = item.AuthorizationType.ToString() + "_CourseAuthorizationTypeTab";
+                if (item.IsActive)
+                {
+                    activeStatus = "active";
+                }
+                
+                <div class="tab-pane @activeStatus" id="@tabName">
+                    @if (item.IsActive)
+                    {
+                        <partial name="_AuthorizationItemsList" model="@Model" />
+                    }
+                </div>
+
+            }
+        </div>
+    </div>
+
+</div>

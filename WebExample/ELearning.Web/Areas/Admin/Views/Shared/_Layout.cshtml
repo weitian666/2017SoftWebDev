@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="icon" href="images/favicon.ico" type="image/ico" />
+
+    <!-- Bootstrap -->
+    <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <!-- iCheck -->
+    <link href="~/lib/iCheck/skins/all.css" rel="stylesheet">
+
+    <!-- bootstrap-progressbar -->
+    <link href="~/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="~/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+
+        
+    <link href="~/vendors/summernote/dist/summernote.css" rel="stylesheet" />
+
+    <!-- bootstrap-daterangepicker -->
+    <link href="~/vendors/bootstrap-datetimepicker/build/css/bootstrap-datepicker.css" rel="stylesheet">
+
+    <!-- bootstrap-fileinput -->
+    <link href="~/vendors/bootstrap-fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+    <link href="~/vendors/bootstrap-fileinput/themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css" />
+
+    <!-- bootstrap-treeview -->
+    <link href="~/vendors/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet" />
+
+    <!-- 定制主题样式 -->
+    <link href="~/build/css/custom.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="~/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="~/vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="~/vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- gauge.js -->
+    <script src="~/vendors/gauge.js/dist/gauge.min.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="~/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <!-- Skycons -->
+    <script src="~/vendors/skycons/skycons.js"></script>
+    <!-- Flot -->
+    <script src="~/vendors/Flot/jquery.flot.js"></script>
+    <script src="~/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="~/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="~/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="~/vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="~/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="~/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="~/vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="~/vendors/DateJS/build/date.js"></script>
+    <!-- JQVMap -->
+    <script src="~/vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script src="~/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="~/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+
+    <!-- 富文本编辑器 -->
+    <script src="~/vendors/summernote/dist/summernote.min.js"></script>
+    <script src="~/vendors/summernote/dist/lang/summernote-zh-CN.js"></script>
+
+    <!-- bootstrap-datepicker -->
+    <script src="~/vendors/bootstrap-datetimepicker/build/js/bootstrap-datepicker.js"></script>
+    <script src="~/vendors/bootstrap-datetimepicker/build/js/bootstrap-datepicker.zh-CN.min.js"></script>
+
+    <!-- bootstrap-fileinput -->
+    <script src="~/vendors/bootstrap-fileinput/js/plugins/piexif.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/js/plugins/sortable.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/js/locales/fr.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/js/locales/es.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/themes/fas/theme.js" type="text/javascript"></script>
+    <script src="~/vendors/bootstrap-fileinput/themes/explorer-fas/theme.js" type="text/javascript"></script>
+
+    <!-- 支持使用 AJAX -->
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery.form.js"></script>
+
+    <!-- bootstrap-treeview -->
+    <script src="~/vendors/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+
+    <!-- 扩展方法 -->
+    <script src="~/js/appCommon.js" type="text/javascript"></script>
+
+</head>
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col menu_fixed">
+              <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                  <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>后台数据管理</span></a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <!-- 用户简要信息 -->
+                  @await Component.InvokeAsync("LoginUserInfo")
+                <!-- /用户简要信息 -->
+
+                <br />
+
+                <!-- 侧边栏菜单 -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                  <div class="menu_section">
+                      <ul class="nav side-menu">
+
+                          <li>
+                              <a><i class="fa fa-users"></i><span style="font-size:16px"> 用户管理员管理</span> <span class="fa fa-chevron-down"></span></a>
+                              <ul class="nav child_menu">
+                                  <li><a asp-area="Admin" asp-controller="ApplicationUser" asp-action="Index"><span style="font-size:15px">管理用户</span> </a></li>
+                              </ul>
+                          </li>
+
+
+                          <li>
+                              <a><i class="fa fa-desktop"></i><span style="font-size:16px">后台人员管理数据</span> <span class="fa fa-chevron-down"></span></a>
+                              <ul class="nav child_menu">
+                                  <li><a asp-area="Admin" asp-controller="ArticleTopic" asp-action="Index"><span style="font-size:15px">数据管理员管理</span> </a></li>
+                                  <li><a asp-area="Admin" asp-controller="Article" asp-action="Index"><span style="font-size:15px">责编管理</span> </a></li>
+                                  <li><a asp-area="Admin" asp-controller="ArticleAudit" asp-action="Index"><span style="font-size:15px">主编管理</span> </a></li>
+                              </ul>
+                          </li>
+
+                          <li>
+                              <a><i class="fa fa-file-text"></i><span style="font-size:16px">个人信息管理</span> <span class="fa fa-chevron-down"></span></a>
+                              <ul class="nav child_menu">
+                                  <li><a asp-area="Admin" asp-controller="Profile" asp-action="Index"><span style="font-size:15px">个人资料管理</span> </a></li>
+                              </ul>
+                          </li>
+
+                      </ul>
+                  </div>
+                </div>
+                <!-- /侧边栏菜单 -->
+
+                <!-- 侧边栏底部快捷菜单 -->
+                <div class="sidebar-footer hidden-small">
+                  <a data-toggle="tooltip" data-placement="top" title="Settings">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                  </a>
+                  <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                    <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                  </a>
+                  <a data-toggle="tooltip" data-placement="top" title="Lock">
+                    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                  </a>
+                  <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                  </a>
+                </div>
+                <!-- /侧边栏底部快捷菜单 -->
+              </div>
+            </div> 
+            
+            <!-- 顶部导航 -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-nav">
+                            <li class="">
+                                <div class="x_title" style="margin-top:10px">
+                                    <span class="title mb-1 h2" style="color:dimgray">@ViewData["ModuleName"]</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">
+                                    <i class="fa fa-close"></i> 退出系统管理中心
+                                </a>
+                            </li>
+                  
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /顶部导航 -->
+
+            <!-- 数据处理工作区 -->
+            <div class="right_col" role="main">
+                @RenderBody()
+            </div>
+            <!-- /数据处理工作区 -->
+
+            <!-- 底部信息 -->
+            <footer>
+              <div class="pull-right">
+               站闻资讯新闻发布
+              </div>
+              <div class="clearfix"></div>
+            </footer>
+            <!-- /底部信息 -->
+        </div>
+    </div>
+
+
+    <!-- 自定义主题脚本 -->
+    <script src="~/build/js/custom.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

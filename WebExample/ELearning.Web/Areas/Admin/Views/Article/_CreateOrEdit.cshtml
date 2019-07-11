@@ -1,0 +1,119 @@
+﻿@model ELearning.ViewModels.News.ArticleVM
+@using ELearning.Web.Helpers
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="x_panel" style="background-color:whitesmoke;border-bottom:solid;border-left:none;border-right:none;border-top:none">
+            <span class="mb-2 h4" style="color:dimgray;margin-top:7px">@ViewData["FunctionName"]</span>
+            <ul class="nav navbar-right panel_toolbox" style="height:12px;margin-top:-5px">
+                <li>
+                    <a href="javascript:void(0)" onclick="submitCreateOrEditForm()" style="color:dimgray"><i class="fa fa-save"></i> 保存内容 </a> &nbsp;
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="gotoTypePage('@Model.TopicItemId')" style="color:dimgray"><i class="fa fa-check green"></i> 结束编辑 </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-right panel_toolbox">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="x_panel">
+            <div id="courseItemContentEditor" class="x_content">
+                <form id="boVM_CreateOrEdit" asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="SaveStatus" name="SaveStatus" value=" @Model.SaveStatus" />
+
+                    <!-- 归属角色 -->
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            @foreach (var item in Model.TopicItemCollection)
+                            {
+                                var status = "";
+                                if (item.IsActive) { status = "checked"; }
+
+                            <label class="checkbox-inline">
+                                <input class="form-check-input" type="checkbox" value="@item.ID" id="TopicItemIdCollection" name="TopicItemIdCollection" @status >
+                                <label class="form-check-label" for="TopicItemCollection">@item.Name</label>
+                            </label>
+                            }
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="TopicItemCollection" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 名称 -->
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <input type="text" class="form-control input-lg col-md-7 col-xs-12" col-md-10 col-xs-12" id="Name" name="Name" placeholder="请输入文章标题名称" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 副标题 -->
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="ArticleSecondTitle" name="ArticleSecondTitle" placeholder="请输入副标题" value="@Model.ArticleSecondTitle" required style="border-color:whitesmoke">
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <span asp-validation-for="ArticleSecondTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 摘要 -->
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入文章摘要说明..." style="border-color:whitesmoke">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 正文内容 -->
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="ArticleContent" name="ArticleContent" placeholder="正文内容..." style="border-color:whitesmoke">@Model.ArticleContent</textarea>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <span asp-validation-for="ArticleContent" class="text-danger"></span>
+                        </div>
+                    </div>
+                        
+                    <!-- 上传其他文件管理 -->
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>文章附件</h2>
+                                <ul class="nav navbar-right panel_toolbox pull-right">
+                                    <li>
+                                        <a class="pull-right btn btn-primary" style="color:white" onclick="openFileUploadModal('commonBusinessFilesSelectorModal', '@Model.Id')"><i class="fa fa-plus"></i> 添加 </a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <!-- 其它文件 --->
+                            <div class="x_content" id="courseItemContentFile">
+                                <partial name="_ArticleAttachmentFiles" model="@Model.FileCollection" />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>@Model.SaveStatus </div>

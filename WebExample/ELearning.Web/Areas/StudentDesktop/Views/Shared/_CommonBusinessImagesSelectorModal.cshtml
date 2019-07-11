@@ -1,0 +1,18 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="commonBusinessImagesSelectorModal" tabindex="-1" role="dialog" aria-labelledby="commonBusinessImagesSelectorModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLongTitle">上传图片文件</h4>*@
+            @*</div>*@
+            <div class="modal-body" id="" style="color:red">
+                <input type="file" multiple class="form-control col-md-7 col-xs-12" id="commonBusinessImagesSelector" name="commonBusinessImagesSelector" placeholder="" value="" required>
+                <input type="hidden" name="relBusinessObjectID" id="relBusinessObjectID" />      <!--这是一个隐藏的数据标签，用于转移待图片关联对象的ID-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeCommonBusinessImagesSelectorModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+

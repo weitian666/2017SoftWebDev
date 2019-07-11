@@ -1,0 +1,36 @@
+﻿@model ELearning.ViewModels.Organization.GradeAndClassVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="@entityController" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7">
+                        <h2>@Model.Name</h2>
+                        <hr>
+                        <address>
+                            <br>@Model.Description
+                            <br>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

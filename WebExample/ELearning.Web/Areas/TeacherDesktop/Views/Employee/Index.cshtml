@@ -1,0 +1,108 @@
+﻿@model IEnumerable<ELearning.ViewModels.Organization.EmployeeVM>
+@using ELearning.Web.Helpers
+@{
+    var pageGroup = ViewData["PageGroup"] as ELearning.DataAccess.Tools.PagenateGroup;
+    var pageParameter = ViewData["ListPageParameter"] as ELearning.DataAccess.Tools.ListPageParameter;
+
+}
+
+<div class="row">
+    <div class="col-sm-2 mail_list_column" id="navigatorPalceArea">
+        <partial name="_Navigator" />
+    </div>
+    <div class="col-sm-10 mail_view" id="mainWorkPlaceArea">
+        <partial name="_List" model="@Model" />
+    </div>
+</div>
+
+<!-- 一些公共操作处理的会话框，此处用于处理创建用户账号 -->
+<partial name="_CommonOperationModal" />
+
+
+<!-- 一组用于留存查询、分页、导航处理等相关的中间变量，方便需要的时候提取 -->
+@Html.SetListPageParameter(pageParameter)
+
+@section Scripts{
+    <script>
+
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 初始化导航树
+        $(function () {
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName + '/TreeViewData',
+                beforeSend: function () {
+                }
+            }).done(function (dataReusult) {
+                // 使用 boot-treeview 插件
+                $('#navigatorTreeView').treeview({
+                    data: dataReusult,
+                    onNodeSelected: function (event, node) {
+                        gotoTypePage(node.id);
+                    }
+                });
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        });
+
+        // 根据类型列表
+        function gotoTypePage(id) {
+            $('#lionTypeID').val(id);
+            gotoListWithJson();
+        }
+
+        // 根据关键词检索列表
+        function gotoSearchPage(keyword) {
+            $('#lionKeyword').val(keyword);
+            $('#lionPageIndex').val('1');
+            $('#lionSortDesc').val('')
+            $('#lionSortProperty').val('Name')
+            gotoListWithJson();
+        }
+
+        // 根据属性排序列表
+        function gotoSortPage(sortPropertyName, sortID) {
+            var sortStatus = $('#lionSortDesc').val();  // 获取当前的排序形式
+            if (sortStatus == 'Default') {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-down" style="color:slategray"></span>';
+                $('#lionSortDesc').val('')
+
+            } else {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-up" style="color:slategray"></span>';
+                $('#lionSortDesc').val('Default')
+            }
+            $('#lionSortProperty').val(sortPropertyName)
+            gotoListWithJson();
+        }
+
+        // 提取数据列表相关的参数，构成完成后向后端提交
+        function gotoListWithJson() {
+            var listParaJson = lionGetListParaJson();
+            var jsonData = { "listPageParaJson": listParaJson };
+            $.ajax({
+                cache: false,
+                type: "POST",
+                async: true,
+                url: '/TeacherDesktop/' + controllerName + '/List',
+                data: jsonData,
+                beforeSend: function () {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = "<p style='margin-top:50px;' align='center'> <i class='fa fa-spinner fa-pulse fa-2x'></i></p>" +
+                        "<p style='margin-top:50px;' align='center'>  数据加载中，请稍候...</p>";
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                //console.error("调试错误:" + errorThrown);
+            }).always(function () {
+            });
+        }
+
+    </script>
+}

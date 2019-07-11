@@ -1,0 +1,48 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseAuthorizationSelectorVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+    var tabName = Model.AuthorizationType.ToString() + "_CourseAuthorizationTypeTab";
+
+    var titleName = Model.AuthorizationTypeForCourseCollection.Where(x => x.AuthorizationType == Model.AuthorizationType).FirstOrDefault().AuthorizationTypeDisplayName;
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="x_panel" style="background-color:whitesmoke;border-bottom:solid;border-left:none;border-right:none;border-top:none">
+            <span class="mb-2 h4" style="color:dimgray;margin-top:7px"> @titleName </span>
+            <ul class="nav navbar-right panel_toolbox" style="height:12px;margin-top:-5px">
+                <li>
+                    <a href="javascript:void(0)" onclick="gotoAuthorizationItemsListSelector('@Model.CourseID','@Model.AuthorizationType','@tabName')" style="color:dimgray"><i class="fa fa-plus"></i> 配置授权用户或者用户组 </a> &nbsp;
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0">
+    <thead>
+        <tr>
+            <th width="60px">序号</th>
+            <th width="180px">用户或角色组</th>
+            <th>说明</th>
+            <th width="50px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BeAuthorizationedItemCollection)
+        {
+            <tr>
+                <td>@item.OrderNumber</td>
+                <td>
+                    @item.Name
+                    @if (item.IsUser) {<i class="fa fa-user pull-right"></i> } else {<i class="fa fa-users pull-right"></i> }
+                </td>
+                <td> @item.Description </td>
+                <td class="text-center">
+                    <a href="javascript:void()" onclick="gotoRemoveItemFromAuthorization('@Model.CourseID','@item.Id','@item.IsUser','false','@Model.AuthorizationType','@tabName')"> 移除 </a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

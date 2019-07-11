@@ -1,0 +1,56 @@
+﻿@{
+    var pageGroup = ViewData["PageGroup"] as ELearning.DataAccess.Tools.PagenateGroup;
+}
+
+<nav class=" pull-right" style="margin-top:-20px">
+    <ul class="pagination justify-content-end">
+        @if (pageGroup.PagenateGroupItem.FirstIndex == 1)
+        {
+            <li class="disabled"><a href="javascript:gotoPage('1')" aria-label="第一页"><span aria-hidden="true" class="glyphicon glyphicon-step-backward"></span></a></li>
+            <li class="disabled"><a href="#" aria-label="回退一组"><span aria-hidden="true" class="glyphicon glyphicon-backward"></span></a></li>
+            if (pageGroup.PageIndex >= 2)
+            {
+                <li class=""><a href="javascript:gotoPage('@(pageGroup.PageIndex-1)')" aria-label="前一页"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span></a></li>
+            }
+            else
+            {
+                <li class="disabled"><a href="#" aria-label="前一页"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span></a></li>
+            }
+        }
+        else
+        {
+            <li class=""><a href="javascript:gotoPage('1')" aria-label="第一页"><span aria-hidden="true" class="glyphicon glyphicon-step-backward"></span></a></li>
+            <li class=""><a href="javascript:gotoPage('@(pageGroup.PagenateGroupItem.FirstIndex-1)')" aria-label="回退一组"><span aria-hidden="true" class="glyphicon glyphicon-backward"></span></a></li>
+            <li class=""><a href="javascript:gotoPage('@(pageGroup.PageIndex-1)')" aria-label="前一页"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span></a></li>
+        }
+        @for (int i = pageGroup.PagenateGroupItem.FirstIndex; i < pageGroup.PagenateGroupItem.LastIndex + 1; i++)
+        {
+            var activeString = "";
+            if (i == pageGroup.PageIndex)
+            {
+                activeString = "active";
+            }
+            <li class="@activeString "><a href="javascript:gotoPage('@i')">@i <span class="sr-only">(current)</span></a></li>
+        }
+        @if (pageGroup.PagenateGroupItem.LastIndex == pageGroup.PageAmount)
+        {
+            if (pageGroup.PageIndex < pageGroup.PageAmount)
+            {
+                <li class=""><a href="javascript:gotoPage('@(pageGroup.PageIndex+1)')" aria-label="下一页"><span aria-hidden="false" class="glyphicon glyphicon-chevron-right"></span></a></li>
+            }
+            else
+            {
+                <li class="disabled"><a href="#" aria-label="下一页"><span aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span></a></li>
+            }
+            <li class="disabled"><a href="#" aria-label="向前一组"><span aria-hidden="true" class="glyphicon glyphicon-forward"></span></a></li>
+            <li class="disabled"><a href="#" aria-label="最后页"><span aria-hidden="true" class="glyphicon glyphicon-fast-forward"></span></a></li>
+        }
+        else
+        {
+            <li class=""><a href="javascript:gotoPage('@(pageGroup.PageIndex+1)')" aria-label="后一页"><span aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span></a></li>
+            <li class=""><a href="javascript:gotoPage('@(pageGroup.PagenateGroupItem.LastIndex+1)')" aria-label="向前一组"><span aria-hidden="true" class="glyphicon glyphicon-forward"></span></a></li>
+            <li class=""><a href="javascript:gotoPage('@pageGroup.PageAmount')" aria-label="最后一条"><span aria-hidden="true" class="glyphicon glyphicon-fast-forward"></span></a></li>
+        }
+
+    </ul>
+</nav>

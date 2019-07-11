@@ -1,0 +1,248 @@
+﻿@model ELearning.ViewModels.Common.TestVM
+
+<!-- 普通表单应用实现参考 -->
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["FunctionName"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a asp-area="Admin" asp-controller="Demo" asp-action="Index"> 退出 </a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form asp-area="Admin" asp-controller="Demo" asp-action="Create" class="form-horizontal form-label-left"  enctype="multipart/form-data" novalidate>
+                        
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="ID" name="Id" value="@Model.ID" />
+
+                    <!-- 普通文本输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入姓名" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 电子邮件输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Email" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Email" name="Email" placeholder="请输入电子邮件" value="@Model.Email" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 普移动电话输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Mobile" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Mobile" name="Mobile" placeholder="请输入手机号码" value="@Model.Mobile" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 普通文本输入 -->
+                    <div class="item form-group">
+                        <label asp-for="SortCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="SortCode" name="SortCode" placeholder="请输入员工编号" value="@Model.SortCode" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="SortCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 普通文本区域输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 密码输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Password" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control col-md-7 col-xs-12" id="Password" name="Password" placeholder="" value="@Model.Password" required aria-describedby="passwordHelpBlock">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                密码需要至少 8 个字符，并且至少 1 个字母，1 个数字和 1 个特殊字符。
+                            </small>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 密码验证输入 -->
+                    <div class="item form-group">
+                        <label asp-for="PasswordComfirm" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control col-md-7 col-xs-12" id="PasswordComfirm" name="PasswordComfirm" placeholder="" value="@Model.PasswordComfirm" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="PasswordComfirm" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 下拉 option 输入 -->
+                    <div class="item form-group">
+                        <label asp-for="LeaderID" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="LeaderID" name="LeaderID">
+                                <option value=""></option>
+                                @foreach (var item in Model.LeaderItemCollection)
+                                {
+                                    if (item.ID == Model.ID.ToString())
+                                    {
+                                        <option value="@item.ID" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="LeaderID" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 多选一 radio 输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Sex" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="margin-top:8px">
+                            <p>
+                                @if (Model.Sex == true)
+                                {
+                                    <input type="radio" id="Sex01" name="Sex" checked class="custom-control-input flat" value="true">
+                                    <label class="custom-control-label" for="Sex01">男</label>
+                                    <input type="radio" id="customRadioInline2" name="Sex" class="custom-control-input flat" value="false">
+                                    <label class="custom-control-label" for="customRadioInline2">女</label>
+                                }
+                                else
+                                {
+                                    <input type="radio" id="Sex01" name="Sex" class="custom-control-input flat" value="true">
+                                    <label class="custom-control-label" for="Sex01">男</label>
+                                    <input type="radio" id="customRadioInline2" name="Sex" checked class="custom-control-input flat" value="false">
+                                    <label class="custom-control-label" for="customRadioInline2">女</label>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Sex" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 日期输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Birthday" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 input-group date" id="demoDatepicker">
+                            <input type="date" class="form-control" id="Birthday" name="Birthday" placeholder="" value="@Model.Birthday" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Birthday" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 上传文件 -->
+                    <div class="item form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12">上传文件</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="file" multiple class="form-control col-md-7 col-xs-12" id="FileUpload" name="FileUpload" placeholder="" value="" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span  class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div id="test" class="input-group date" data-provide="datepicker">
+                                <input id="test002" type="text" class="form-control">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                             </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="input-group input-daterange" id="test003">
+                                <input type="text" class="form-control" value="2012-04-05">
+                                <div class="input-group-addon">to</div>
+                                <input type="text" class="form-control" value="2012-04-19">
+                            </div>                        
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="submit" class="btn btn-primary">提交数据</button>
+                            <button type="reset" class="btn btn-success">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script  type="text/javascript">
+    $(document).ready(function () {
+        $("#Description").summernote({
+            height: 200,
+            lang:"zh-CN"
+        });
+    });
+
+    $(document).ready(function () {
+        $("#test").datepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN'
+            //lang:"zh-CN"
+        });
+        $("#test003").datepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN'
+            //lang:"zh-CN"
+        });
+
+    });
+
+
+
+    $("#FileUpload").fileinput({
+        language: "zh",
+        uploadUrl: "/Admin/UploadFiles/FilesSave",
+        maxFileCount: 6,
+        uploadAsync: true,
+        showCaption: true,
+        showPreview: true,
+    });
+</script>

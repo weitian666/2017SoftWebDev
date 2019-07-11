@@ -1,0 +1,78 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model System.Data.DataTable
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table tr td {
+        text-align: center;
+        padding: 0.5rem 0;
+        border-color: #dfdfdf;
+        border: 1px solid #dfdfdf;
+    }
+</style>
+<form id="form2">
+    <div style="width:1000px;margin:0 auto; border: 1px solid #808080;height:900px;">
+        <table style=" width: 100%;border-color: #dfdfdf;border-collapse: collapse;">
+            <tr>
+                <td style="width:80px">序号</td>
+                <td style="width:300px">新闻标题</td>
+                <td style="width:200px">新闻类别</td>
+                <td style="width:100px">新闻状态</td>
+                <td style="width:200px">操作</td>
+            </tr>
+            @* 遍历出数据库查询到表的数据 遍历填充到 table里面tr的td对应列明*@
+            @foreach (System.Data.DataRow dr in Model.Rows)
+            {
+                <tr>
+                    <td>
+                        @Model.Rows.IndexOf(dr)
+                    </td>
+                    <td>
+                        @dr["name"]@*指定表中的某一列名*@
+                    </td>
+                    <td>
+                        @dr["Description"]@*指定表中的某一列名*@
+                    </td>
+                    <td>
+                        待审核
+                    </td>
+                    <td>
+                        <input id="Submit" type="Submit" name="@dr["name"]" runat="server" onclick='tg(this)' value="通过" style="margin-right:20px; width:80px;height:35px;background-color:#dfdfdf;" />
+                        <input id="Submit2" type="Submit" name="@dr["Description"]" runat="server" onclick='btg(this)' value="不通过" style=" width:80px;height:35px;background-color:#dfdfdf;" />
+                    </td>
+                </tr>
+            }
+        </table>
+        
+    </div>
+    <a href="~/Controllers/HomeController.cs"></a>
+</form>
+
+<script type="text/javascript">
+                    //通过事件
+                 function tg(element) {
+                    alert(element.name);
+                      //
+                     var name = element.name;
+                     $.ajax({
+                         type: 'post',
+                         url: "../Controllers/ArticleAuditController/aa",
+                         data: name,
+                         success: function (result) {
+                             alert("成功");
+                         }, error: function () {
+                             alert("失败");
+                         }
+
+                     });
+                  };
+                 //这个是不通过事件
+                 function btg(element) {
+                     alert(element.name);
+                 };
+</script>

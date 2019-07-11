@@ -1,0 +1,60 @@
+﻿@model ELearning.ViewModels.UserAndRole.ApplicationUserVM
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="ApplicationUser" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>  
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        @if (!String.IsNullOrEmpty(Model.AvatarPath))
+                        {
+                            <img id="userAvatar" src="../..@Model.AvatarPath" class="img-thumbnail" onclick="openUploadModal('commonBusinessImagesSelectorModal', '@Model.Id')" />
+                        }
+                        else
+                        {
+                            <img id="userAvatar"  src="~/uploadFiles/avatars/defaultAvatar.jpg" class="img-thumbnail" onclick="openUploadModal('commonBusinessImagesSelectorModal', '@Model.Id')" />
+                        }
+                        
+                        单击图片更新头像
+
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7">
+                        <h2>@Model.Name</h2>
+                        <hr>
+                        <address>
+                            <br>@Model.Description
+                            <br>
+                        </address>
+                        <address>
+                            <abbr title="移动电话">P:</abbr>@Model.MobileNumber
+                            <br>
+                            <abbr title="电子邮件">E:</abbr>
+                            <a href="mailto:#">@Model.Email</a>
+                            <br />
+                            <abbr title="归属用户组">P:</abbr> 
+                            @foreach (var item in Model.ApplicationRoleItemCollection)
+                            {
+                                <span class="border">@item.Name  </span>
+                            }
+                            <br>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script  type="text/javascript">
+</script>

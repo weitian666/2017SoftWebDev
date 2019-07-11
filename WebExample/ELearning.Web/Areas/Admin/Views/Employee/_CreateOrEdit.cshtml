@@ -1,0 +1,237 @@
+﻿@model ELearning.ViewModels.Organization.EmployeeVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+    var isNewString = "true";
+    if (!Model.IsNew)
+    {
+        isNewString = "false";
+    }
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="@entityController" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="boVM_CreateOrEdit" asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="IsNew" name="IsNew" value="@isNewString" />
+
+                    <!-- 上级部门 - 带层次的下拉 -->
+                    <div class="item form-group">
+                        <label asp-for="ParentDepartmentId" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="ParentDepartmentId" name="ParentDepartmentId">
+                                <option value=""></option>
+                                @foreach (var item in Model.ParentDepartmentItemCollection)
+                                {
+                                    if (item.ID == Model.ParentDepartmentId)
+                                    {
+                                        <option value="@item.ID" selected>@item.DisplayName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.DisplayName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="ParentDepartmentId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 姓名 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入姓名" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 性别 -->
+                    <div class="item form-group">
+                        <label asp-for="Sex" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="margin-top:8px">
+                            <p>
+                                @if (Model.Sex == true)
+                                {
+                                    <input type="radio" id="Sex01" name="Sex" checked class="custom-control-input flat" value="true">
+                                    <label class="custom-control-label" for="Sex01">男</label>
+                                    <input type="radio" id="customRadioInline2" name="Sex" class="custom-control-input flat" value="false">
+                                    <label class="custom-control-label" for="customRadioInline2">女</label>
+                                }
+                                else
+                                {
+                                    <input type="radio" id="Sex01" name="Sex" class="custom-control-input flat" value="true">
+                                    <label class="custom-control-label" for="Sex01">男</label>
+                                    <input type="radio" id="customRadioInline2" name="Sex" checked class="custom-control-input flat" value="false">
+                                    <label class="custom-control-label" for="customRadioInline2">女</label>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Sex" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 出生日期 -->
+                    <div class="item form-group">
+                        <label asp-for="Birthday" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" id="">
+                            <!-- 日期选择器 -->
+                            <div id="birthdayDatePicker" class="input-group date" data-provide="datepicker">
+                                <input type="text" id="Birthday" name="Birthday" placeholder="" value="@Model.Birthday" required class="form-control">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Birthday" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 工号 -->
+                    <div class="item form-group">
+                        <label asp-for="EmployeeCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="EmployeeCode" name="EmployeeCode" placeholder="请输入工号" value="@Model.EmployeeCode" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="EmployeeCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 移动电话输入 -->
+                    <div class="item form-group">
+                        <label asp-for="MobileNumber" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="MobileNumber" name="MobileNumber" placeholder="请输入手机号码" value="@Model.MobileNumber" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 电子邮件输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Email" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Email" name="Email" placeholder="请输入电子邮件" value="@Model.Email" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 入职日期 -->
+                    <div class="item form-group">
+                        <label asp-for="CreateDateTime" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" id="createDateTimeDatepicker">
+                            <!-- 日期选择器 -->
+                            <div id="createDateTimeDatePicker" class="input-group date" data-provide="datepicker">
+                                <input type="text" id="CreateDateTime" name="CreateDateTime" placeholder="" value="@Model.CreateDateTime" required class="form-control">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="CreateDateTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 离职日期 -->
+                    <div class="item form-group">
+                        <label asp-for="ExpiredDateTime" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" id="expiredDateTimeDatepicker">
+                            <!-- 日期选择器 -->
+                            <div id="expiredDateTimeDatePicker" class="input-group date" data-provide="datepicker">
+                                <input type="text" id="ExpiredDateTime" name="ExpiredDateTime" placeholder="" value="@Model.ExpiredDateTime" required class="form-control">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="ExpiredDateTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 岗位 -->
+                    <div class="item form-group">
+                        <label asp-for="JobTitleId" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" id="JobTitleId" name="JobTitleId">
+                                <option value=""></option>
+                                @foreach (var item in Model.JobTitleItemCollection)
+                                {
+                                    if (item.ID == Model.JobTitleId)
+                                    {
+                                        <option value="@item.ID" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="JobTitleId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 联系地址 -->
+                    <div class="item form-group">
+                        <label asp-for="Address" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Address" name="Address" placeholder="请输入工号" value="@Model.Address" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 简要说明 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="button" class="btn btn-primary" onclick="submitCreateOrEditForm()"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

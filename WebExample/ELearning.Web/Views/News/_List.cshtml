@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ELearning.ViewModels.News.ArticleVM>
+@using ELearning.Web.Helpers
+@{
+    var pageGroup = ViewData["PageGroup"] as ELearning.DataAccess.Tools.PagenateGroup;
+    var pageParameter = ViewData["ListPageParameter"] as ELearning.DataAccess.Tools.ListPageParameter;
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"> 全部新闻 </h3>
+    </div>
+    <div class="card-body">
+        <table class="table card-table table-condensed">
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td><a asp-action="ArticleContent" asp-route-id="@item.Id" target="_blank"> @item.Name </a></td>
+                <td class="text-right">
+                    @item.PublishDate
+                </td>
+            </tr>
+            }
+        </table>
+    </div>
+</div>

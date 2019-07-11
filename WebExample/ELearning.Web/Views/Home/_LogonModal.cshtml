@@ -1,0 +1,58 @@
+﻿@model ELearning.ViewModels.Common.LoginVM
+@{
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalCenterTitle">欢迎进入伊乐在线课程学习平台</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <div class="row">
+              <div class="col col-login mx-auto">
+                <form id="boVM_UserLoginForm" class=""  asp-area="" asp-controller="Account" asp-action="Logon" method="post">
+                    <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="@Model.ReturnUrl" />
+                    <div class="">
+                        <div>
+                            <span class="text-danger field-validation-valid">@ViewData["LoginStatusString"]</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="请输入用户名" value="@Model.UserName">
+                        </div>
+                        <div class=""  style="margin-top:-6px;margin-bottom:12px">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                密码
+                                <a href="./forgot-password.html" class="float-right small">忘记密码？</a>
+                            </label>
+                            <input type="password" class="form-control"  id="Password" name="Password" placeholder="请输入密码" value="@Model.Password" >
+                        </div>
+                        <div class="" style="margin-top:-6px;margin-bottom:12px">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" /> <span class="custom-control-label">记住我</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="submitUserLoginorm()">登录</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">退出</button>
+          <div class="text-center text-muted float-left">
+              没有账号？<a href="./register.html">注册</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

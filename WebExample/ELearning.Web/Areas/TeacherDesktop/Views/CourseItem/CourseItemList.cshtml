@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ELearning.ViewModels.TeachingCourse.CourseItemVM>
+@using ELearning.Web.Helpers
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-3 mail_list_column" id="navigatorPalceArea">
+        <partial name="_Navigator" model="@ViewData["CourseCollection"]" />
+    </div>
+    <div class="col-sm-9 mail_view" id="mainWorkPlaceArea">
+        <partial name="_List" model="@Model" />
+    </div>
+</div>
+
+<partial name="_CommonDeleteItemModal" />
+<partial name="_CommonCreateOrEditModal" />
+
+@section Scripts{
+    <script>
+
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 根据课程 id 列表，列表内容渲染到 _List 局部页
+        function gotoTypePage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName+'/List/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+            }).fail(function () {
+                alert("课程列表失败，连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开新增或者编辑部门对象数据的会话框
+        function openCreateOrEditModal(id, courseId) {
+            $('#createOrEditModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            // 访问后台 CreateOrEdit 方法，获取新建或者编辑数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName+'/CreateOrEdit/' + id +"?courseId="+courseId,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("createOrEditAreaInModal").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开添加同级单元编辑处理会话框
+        function openCreateOrEditLateralItemModal(id, courseId) {
+            $('#createOrEditModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            // 访问后台 CreateOrEdit 方法，获取新建或者编辑数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName+'/CreateOrEditLateralItem/' + id +"?courseId="+courseId,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("createOrEditAreaInModal").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开下级单元处理会话框
+        function openCreateOrEditSubItemModal(id, courseId) {
+            $('#createOrEditModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            // 访问后台 CreateOrEdit 方法，获取新建或者编辑数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName+'/CreateOrEditSubItem/' + id +"?courseId="+courseId,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("createOrEditAreaInModal").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 关闭对话框
+        function closeopenCreateOrEditModal() {
+            $('#createOrEditModal').modal('hide');
+        }
+
+        // 使用 ajax 提交 form 数据
+        function submitCreateOrEditForm() {
+            var personCreateFormOptions = {
+                success: function (data) {
+                    document.getElementById("createOrEditAreaInModal").innerHTML = data;
+                    // 提取返回的会话框中保存结果状态
+                    var saveStatus = $('#SaveStatus').val();
+                    if (saveStatus == "OK") {
+                        var courseId=$('#CourseId').val();
+                        gotoTypePage(courseId);
+                        closeopenCreateOrEditModal();
+                    }
+                }
+            };
+            $('#boVM_CreateOrEdit').ajaxSubmit(personCreateFormOptions);
+        }
+
+        function openDeleteItemModal(modalId, itemId, message) {
+            $('#'+modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            document.getElementById("deleteModalMessage").innerHTML = "<i class='fa fa-exclamation fa-1x'></i> " + message;
+            $('#businessObjectID').val(itemId);
+        }
+
+        function gotoDeleteBo() {
+            var boVMID = $('#businessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName + '/Delete/' + boVMID,
+                beforeSend: function () {
+                }
+            }).done(function (delStatus) {
+                if (delStatus.deleteSatus === true) {
+                    $('#deleteItemModal').modal('hide')
+                    window.location.href = "/Admin/" + controllerName + "/Index";
+                } else {
+                    document.getElementById("deleteModalErrMessage").innerText = delStatus.message;
+                }
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+    </script>
+}

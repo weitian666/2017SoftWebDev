@@ -1,0 +1,237 @@
+﻿@model IEnumerable<ELearning.ViewModels.Organization.EmployeeVM>
+@using ELearning.Web.Helpers
+@{
+    var pageGroup = ViewData["PageGroup"] as ELearning.DataAccess.Tools.PagenateGroup;
+    var pageParameter = ViewData["ListPageParameter"] as ELearning.DataAccess.Tools.ListPageParameter;
+
+}
+
+<div class="row">
+    <div class="col-sm-2 mail_list_column" id="navigatorPalceArea">
+        <partial name="_Navigator" />
+    </div>
+    <div class="col-sm-10 mail_view" id="mainWorkPlaceArea">
+        <partial name="_List" model="@Model" />
+    </div>
+</div>
+
+<!-- 一些公共操作处理的会话框，此处用于处理创建用户账号 -->
+<partial name="_CommonOperationModal" />
+
+
+<!-- 一组用于留存查询、分页、导航处理等相关的中间变量，方便需要的时候提取 -->
+@Html.SetListPageParameter(pageParameter)
+
+@section Scripts{
+    <script>
+
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 初始化导航树
+        $(function () {
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/Admin/' + controllerName + '/TreeViewData',
+                beforeSend: function () {
+                }
+            }).done(function (dataReusult) {
+                // 使用 boot-treeview 插件
+                $('#navigatorTreeView').treeview({
+                    data: dataReusult,
+                    onNodeSelected: function (event, node) {
+                        gotoTypePage(node.id);
+                    }
+                });
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        });
+
+        // 根据类型列表
+        function gotoTypePage(id) {
+            $('#lionTypeID').val(id);
+            gotoListWithJson();
+        }
+
+        // 根据关键词检索列表
+        function gotoSearchPage(keyword) {
+            $('#lionKeyword').val(keyword);
+            $('#lionPageIndex').val('1');
+            $('#lionSortDesc').val('')
+            $('#lionSortProperty').val('Name')
+            gotoListWithJson();
+        }
+
+        // 调用新建编辑局部页，如果在局部页中使用了需要进行初始化处理的控件，在返回之后可以执行相关的初始化方法
+        function gotoCreateOrEditPage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/'+controllerName+'/CreateOrEdit/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                // 渲染局部页
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                // 初始化控件
+                initialDatePickers();
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 使用 ajax 提交新建人员 form 数据
+        function submitCreateOrEditForm() {
+            var personCreateFormOptions = {
+                success: function (data) {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                    // 刷新导航区
+                    refreshNavigator();
+                }
+            };
+            $('#boVM_CreateOrEdit').ajaxSubmit(personCreateFormOptions);
+        }
+
+        // 根据属性排序列表
+        function gotoSortPage(sortPropertyName, sortID) {
+            var sortStatus = $('#lionSortDesc').val();  // 获取当前的排序形式
+            if (sortStatus == 'Default') {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-down" style="color:slategray"></span>';
+                $('#lionSortDesc').val('')
+
+            } else {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-up" style="color:slategray"></span>';
+                $('#lionSortDesc').val('Default')
+            }
+            $('#lionSortProperty').val(sortPropertyName)
+            gotoListWithJson();
+        }
+
+        function openDeleteItemModal(modalId, itemId, message) {
+            $('#'+modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            document.getElementById("deleteModalMessage").innerHTML = "<i class='fa fa-exclamation fa-1x'></i> " + message;
+            $('#businessObjectID').val(itemId);
+        }
+
+        function gotoDeleteBo() {
+            var boVMID = $('#businessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/Admin/' + controllerName + '/Delete/' + boVMID,
+                beforeSend: function () {
+                }
+            }).done(function (delStatus) {
+                if (delStatus.deleteSatus === true) {
+                    $('#deleteItemModal').modal('hide')
+                    window.location.href = "/Admin/" + controllerName + "/Index";
+                } else {
+                    document.getElementById("deleteModalErrMessage").innerText = delStatus.message;
+                }
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 提取数据列表相关的参数，构成完成后向后端提交
+        function gotoListWithJson() {
+            var listParaJson = lionGetListParaJson();
+            var jsonData = { "listPageParaJson": listParaJson };
+            $.ajax({
+                cache: false,
+                type: "POST",
+                async: true,
+                url: '/Admin/' + controllerName + '/List',
+                data: jsonData,
+                beforeSend: function () {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = "<p style='margin-top:50px;' align='center'> <i class='fa fa-spinner fa-pulse fa-2x'></i></p>" +
+                        "<p style='margin-top:50px;' align='center'>  数据加载中，请稍候...</p>";
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                //console.error("调试错误:" + errorThrown);
+            }).always(function () {
+            });
+        }
+
+        // 初始化时间日期控件
+        function initialDatePickers() {
+            $("#birthdayDatePicker").datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN'
+            });
+            $("#createDateTimeDatePicker").datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN'
+            });
+            $("#expiredDateTimeDatePicker").datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN'
+            });
+        }
+
+        // 打开设置用户会话框
+        function openCommonOperationModal(id) {
+            $('#commonOperationModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/SetApplicationUser/' + id ,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("commonOperationModalPartial").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 提交用户数据
+        function submitCommonOperationForm() {
+            var commonOperationFormOptions = {
+                success: function (data) {
+                    document.getElementById("commonOperationModalPartial").innerHTML = data;
+                    // 提取返回的会话框中保存结果状态
+                    var saveStatus = $('#SaveStatus').val();
+                    if (saveStatus == "OK") {
+                        // 提取返回模态框中的数据
+                        var itemName  = $('#UserName').val();
+                        var itemId    = $('#PersonId').val();
+                        var itemDivId = 'R_' + itemId;
+                        // 刷新显示区
+                        document.getElementById(itemDivId).innerHTML = "<a href='javascript:void(0)' onclick='openCommonOperationModal(\"" + itemId + "\")'> <i class='fa fa-edit'></i> </a>" + itemName;
+                        // 关闭会话框
+                        closeCommonOperationModal();
+                    }
+                }
+            };
+            $('#commonOperationForm').ajaxSubmit(commonOperationFormOptions);
+        }
+
+        // 关闭用户组设置会话框
+        function closeCommonOperationModal() {
+            $('#commonOperationModal').modal('hide'); 
+        }
+
+    </script>
+}

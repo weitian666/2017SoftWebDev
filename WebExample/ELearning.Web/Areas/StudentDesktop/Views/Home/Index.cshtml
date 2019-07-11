@@ -1,0 +1,24 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemContentVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-9 mail_view" id="mainWorkPlaceArea">
+        <partial name="_CourseDetail" model="@Model" />
+    </div>
+    <div class="col-sm-3" id="navigatorPalceArea">
+        <div class="x_title">
+            <h4>最近学习的课程单元</h4>
+            <div class="clearfix"></div>
+        </div>
+
+        <div id="navigatorTreeView"></div>
+
+        <div class="x_title">
+            <h4>教学工作信息</h4>
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>

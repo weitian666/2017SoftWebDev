@@ -1,0 +1,4 @@
+﻿原始地址：https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/powershell
+应用说明：
+Add-Migration -Name "ELearning001" -Project "ELearning.ORM"  -StartupProject "ELearning.Web"
+Update-Database -Migration "ELearning001"  -Project "ELearning.ORM"  -StartupProject "ELearning.Web"

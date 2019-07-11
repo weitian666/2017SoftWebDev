@@ -1,0 +1,68 @@
+﻿@model ELearning.ViewModels.EntityViewModel
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewData["FunctionName"]</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a asp-area="Admin" asp-controller="@entityController" asp-action="Index"> 退出 </a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+
+                    <!-- 普通文本输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入角色组名称" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 普通文本输入 -->
+                    <div class="item form-group">
+                        <label asp-for="SortCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="SortCode" name="SortCode" placeholder="请输入角色组编码" value="@Model.SortCode" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="SortCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 普通文本区域输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="submit" class="btn btn-primary">提交数据</button>
+                            <button type="reset" class="btn btn-success">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

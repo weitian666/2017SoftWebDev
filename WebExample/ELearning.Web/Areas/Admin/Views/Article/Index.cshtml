@@ -1,0 +1,270 @@
+﻿@model IEnumerable<ELearning.ViewModels.News.ArticleVM>
+@using ELearning.Web.Helpers
+@{
+    var pageGroup = ViewData["PageGroup"] as ELearning.DataAccess.Tools.PagenateGroup;
+    var pageParameter = ViewData["ListPageParameter"] as ELearning.DataAccess.Tools.ListPageParameter;
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-3 mail_list_column" id="navigatorPalceArea">
+        <partial name="_Navigator" model="@ViewData["ArticleTopicVMCollection"]" />
+    </div>
+    <div class="col-sm-9 mail_view" id="mainWorkPlaceArea">
+        <partial name="_List" model="@Model" />
+    </div>
+</div>
+
+<!-- 一组用于留存查询、分页、导航处理等相关的中间变量，方便需要的时候提取 -->
+@Html.SetListPageParameter(pageParameter)
+
+<!-- 删除对象确认提交会话框 -->
+<partial name="_CommonDeleteItemModal" />
+
+<!-- 上传选择器会话框 -->
+<partial name="_CommonBusinessVideoesSelectorModal" />
+<partial name="_CommonBusinessImagesSelectorModal" />
+<partial name="_CommonBusinessFilesSelectorModal" />
+
+
+@section Scripts{
+    <script>
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 翻页列表
+        function gotoPage(pageIndex) {
+            $('#lionPageIndex').val(pageIndex);
+            gotoListWithJson();
+        }
+
+        // 根据类型列表
+        function gotoTypePage(id) {
+            $('#lionTypeID').val(id);
+            gotoListWithJson();
+        }
+
+        // 根据属性排序列表
+        function gotoSortPage(sortPropertyName, sortID) {
+            var sortStatus = $('#lionSortDesc').val();  // 获取当前的排序形式
+            if (sortStatus == 'Default') {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-down" style="color:slategray"></span>';
+                $('#lionSortDesc').val('')
+
+            } else {
+                document.getElementById(sortID).innerHTML = '<span aria-hidden="true" class="glyphicon glyphicon-chevron-up" style="color:slategray"></span>';
+                $('#lionSortDesc').val('Default')
+            }
+            $('#lionSortProperty').val(sortPropertyName)
+            gotoListWithJson();
+        }
+
+        // 根据关键词检索列表
+        function gotoSearchPage(keyword) {
+            $('#lionKeyword').val(keyword);
+            $('#lionPageIndex').val('1');
+            $('#lionSortDesc').val('')
+            $('#lionSortProperty').val('UserName')
+            gotoListWithJson();
+        }
+
+        // 提取数据列表相关的参数，构成完成后向后端提交
+        function gotoListWithJson() {
+            var listParaJson = lionGetListParaJson();
+            var jsonData = { "listPageParaJson": listParaJson };
+            $.ajax({
+                cache: false,
+                type: "POST",
+                async: true,
+                url: '/Admin/' + controllerName + '/List',
+                data: jsonData,
+                beforeSend: function () {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = "<p style='margin-top:50px;' align='center'> <i class='fa fa-spinner fa-pulse fa-2x'></i></p>" +
+                        "<p style='margin-top:50px;' align='center'>  数据加载中，请稍候...</p>";
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                //console.error("调试错误:" + errorThrown);
+            }).always(function () {
+            });
+        }
+
+        // 调用新建编辑局部页
+        function gotoCreateOrEditPage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/CreateOrEdit/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                initialRichTextEditor();
+
+            }).fail(function () {
+                alert("新建或者编辑文章连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 调用明细数据局部页
+        function gotoDetailPage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/Detail/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 使用 ajax 提交新建人员 form 数据
+        function submitCreateOrEditForm() {
+            var boVMCreateFormOptions = {
+                success: function (data) {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                    initialRichTextEditor();
+                    // 刷新导航区
+                    refreshNavigator();
+                }
+            };
+            $('#boVM_CreateOrEdit').ajaxSubmit(boVMCreateFormOptions);
+        }
+
+        // 刷新导航区
+        function refreshNavigator() {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/Navigator/',
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("navigatorPalceArea").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 初始化文本编辑器
+        function initialRichTextEditor(){
+            $("#ArticleContent").summernote({
+                height: 300,
+                lang:"zh-CN"
+            });
+        }
+
+        // 初始化其它文件上传控件
+        $("#commonBusinessFilesSelector").fileinput({
+            language: "zh",
+            uploadUrl: "/Admin/UploadFiles/FilesSave",
+            maxFileCount: 6,
+            minFileCount: 1,
+            uploadAsync: true,
+            showCaption: true,
+            showPreview: true,
+            initialCaption: "请选择上传普通文件",
+            uploadExtraData: function () {
+                var idValue = $('#filesRelBusinessObjectID').val();
+                return { id: idValue };
+            }
+        });
+
+        // 打开上传文件会话框
+        function openUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#relBusinessObjectID').val(itemId);
+        }
+
+        // 打开删除人员确认会话框
+        function openDeleteItemModal(modalId, itemId, message) {
+            $('#'+modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            document.getElementById("deleteModalMessage").innerHTML = "<i class='fa fa-exclamation fa-1x'></i> " + message;
+            $('#businessObjectID').val(itemId);
+        }
+
+        // 执行删除
+        function gotoDeleteBo() {
+            var boVMID = $('#businessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/Admin/' + controllerName + '/Delete/' + boVMID,
+                beforeSend: function () {
+                }
+            }).done(function (delStatus) {
+                if (delStatus.deleteSatus === true) {
+                    $('#deleteItemModal').modal('hide')
+                    window.location.href = '/Admin/' + controllerName + '/Index';
+                } else {
+                    document.getElementById("deleteModalErrMessage").innerText = delStatus.message;
+                }
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开上传其它文件会话框
+        function openFileUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#filesRelBusinessObjectID').val(itemId);
+        }
+        function closeCommonBusinessFilesSelectorModal() {
+            $('#commonBusinessFilesSelectorModal').modal('hide');
+            var id = $('#filesRelBusinessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/RefreshAttachmentFiles/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("courseItemContentFile").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        function deleteFilesAndRefresh(bovmId,id)
+        {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/DeleteAttachmentFiles/' + bovmId + "?businessFileId="+id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("courseItemContentFile").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+
+        }
+
+    </script>
+}

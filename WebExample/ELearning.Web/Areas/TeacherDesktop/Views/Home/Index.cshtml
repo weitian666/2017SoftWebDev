@@ -1,0 +1,76 @@
+﻿@model IEnumerable<ELearning.ViewModels.TeachingCourse.CoursesVM>
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-12" id="mainWorkPlaceArea">
+        <partial name="_PersonCourseList" model="@ViewData["PersonCourseVMCollection"]" />
+        <partial name="_OrganizationCourseList" model="@Model" />
+    </div>
+</div>
+<partial name="_CommonDeleteItemModal" />
+
+@section Scripts{
+    <script>
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 打开删除会话框
+        function openDeleteItemModal(modalId, itemId, message) {
+            $('#'+modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            document.getElementById("deleteModalMessage").innerHTML = "<i class='fa fa-exclamation fa-1x'></i> " + message;
+            $('#businessObjectID').val(itemId);
+        }
+        // 执行删除
+        function gotoDeleteBo() {
+            var boVMID = $('#businessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName + '/Delete/' + boVMID,
+                beforeSend: function () {
+                }
+            }).done(function (delStatus) {
+                if (delStatus.deleteSatus === true) {
+                    $('#deleteItemModal').modal('hide')
+                    window.location.href = "/TeacherDesktop/" + controllerName + "/Index";
+                } else {
+                    document.getElementById("deleteModalErrMessage").innerText = delStatus.message;
+                }
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 打开课程访问授权管理会话框
+    function openCommonOperationLargeModal(id) {
+        alert("Test");
+            $('#commonOperationLargeModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            // 访问后台 CreateOrEdit 方法，获取新建或者编辑数据的呈现页面内容
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/TeacherDesktop/' + controllerName+'/AuthorizationItemsListSelector/' + id,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("commonOperationLargeModalContent").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+    </script>
+}

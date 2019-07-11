@@ -1,0 +1,99 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CoursesVM
+@{ 
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <!-- 表单头 -->
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="TeacherDesktop" asp-controller="@entityController" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!-- 表单体 -->
+            <div class="x_content">
+                <form asp-area="TeacherDesktop" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+
+                    <!-- 名称 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入角色组名称" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 编码 -->
+                    <div class="item form-group">
+                        <label asp-for="SortCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="SortCode" name="SortCode" placeholder="请输入角色组编码" value="@Model.SortCode" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="SortCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 开始和结束时间 -->
+                    <div class="item form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12">课程有效期</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="input-group input-daterange" id="openAndCloseDatePicker">
+                                <input id="OpenDate" name="OpenDate" type="text" class="form-control" value="@Model.OpenDate">
+                                <div class="input-group-addon"> 至 </div>
+                                <input id="CloseDate" name="CloseDate" type="text" class="form-control" value="@Model.CloseDate">
+                            </div>                        
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 简要说明 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        // 初始化时间日期控件
+        $("#openAndCloseDatePicker").datepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN'
+        });
+    </script>
+}

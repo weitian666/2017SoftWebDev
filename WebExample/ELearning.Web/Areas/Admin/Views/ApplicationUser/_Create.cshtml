@@ -1,0 +1,145 @@
+﻿@model ELearning.ViewModels.UserAndRole.ApplicationUserVM
+@{
+    var isNewString = "true";
+    if (!Model.IsNew)
+    {
+        isNewString = "false";
+    }
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="ApplicationUser" asp-action="Index" class="pull-right btn btn-dark"><i class="fa fa-times"></i> 退出 </a>  
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="boVM_CreateOrEdit" asp-area="Admin" asp-controller="ApplicationUser" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="IsNew" name="IsNew" value="@isNewString" />
+
+                    <!-- 用户名 -->
+                    <div class="item form-group">
+                        <label asp-for="UserName" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="UserName" name="UserName" placeholder="请输入显示名称" value="@Model.UserName" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 电子邮件 -->
+                    <div class="item form-group">
+                        <label asp-for="Email" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Email" name="Email" placeholder="请输入电子邮件" value="@Model.Email" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 密码输入 -->
+                    <div class="item form-group">
+                        <label asp-for="Password" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control col-md-7 col-xs-12" id="Password" name="Password" placeholder="" value="@Model.Password" required aria-describedby="passwordHelpBlock">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                密码需要至少 8 个字符，并且至少 1 个大写字母，1 个小写字母，1 个数字和 1 个特殊字符。
+                            </small>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 密码验证输入 -->
+                    <div class="item form-group">
+                        <label asp-for="PasswordComfirm" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" class="form-control col-md-7 col-xs-12" id="PasswordComfirm" name="PasswordComfirm" placeholder="" value="@Model.PasswordComfirm" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="PasswordComfirm" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 中文名 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入显示名称" value="@Model.Name" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+                    <!-- 移动电话 -->
+                    <div class="item form-group">
+                        <label asp-for="MobileNumber" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="MobileNumber" name="MobileNumber" placeholder="请输入手机号码" value="@Model.MobileNumber" required>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 归属角色 -->
+                    <div class="item form-group">
+                        <label asp-for="ApplicationRoleItemIdCollection" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @foreach (var item in Model.ApplicationRoleItemCollection)
+                            {
+                                var status = "";
+                                if (item.IsActive) { status = "checked"; }
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@item.ID" id="ApplicationRoleItemIdCollection" name="ApplicationRoleItemIdCollection" @status>
+                                    <label class="form-check-label" for="ApplicationRoleItemIdCollection">@item.Name</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="ApplicationRoleItemIdCollection" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 简要说明 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="button" class="btn btn-primary" onclick="submitCreateOrEditForm()"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

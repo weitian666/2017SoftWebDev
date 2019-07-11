@@ -1,0 +1,162 @@
+﻿@model IEnumerable<ELearning.ViewModels.Organization.GradeAndClassVM>
+@{ 
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> 新增数据</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="50px">编号</th>
+                            <th width="200px">名称</th>
+                            <th width="50px">人数</th>
+                            <th width="150px">用户组名称</th>
+                            <th>简要说明</th>
+                            <th width="100px">编码</th>
+                            <th width="160px" align="center">数据操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.OrderNumber</td>
+                            <td>@item.Name</td>
+                            <td>@item.PersonAmount</td>
+                            <td>
+                                @if (String.IsNullOrEmpty(item.ApplicationRoleName))
+                                {
+                                    <div id="R_@item.Id">
+                                        <a href="javascript:void(0)" onclick="openCommonOperationModal('@item.Id')"><i class="fa fa-edit red"></i> </a> 创建用户组
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="R_@item.Id">
+                                        <a href="javascript:void(0)" onclick="openCommonOperationModal('@item.Id')"> <i class="fa fa-edit"></i> </a> @item.ApplicationRoleName
+                                    </div>
+                                }
+                            </td>
+                            <td>@item.Description</td>
+                            <td>@item.SortCode</td>
+                            <td align="center">
+                                <a asp-action="CreateOrEdit" asp-route-id="@item.Id">编辑</a> |
+                                <a asp-action="Detail" asp-route-id="@item.Id">详细</a> |
+                                <a href="javascript:void(0)" onclick="openDeleteItemModal('deleteItemModal', '@item.Id', '你所选择的数据：@item.Name'+' 将被删除，请你确认！')">删除 </a> |
+                                <a href="#"> 学生 </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_CommonDeleteItemModal" />
+<partial name="_CommonOperationModal" />
+
+
+@section Scripts{
+    <script>
+
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        function openDeleteItemModal(modalId, itemId, message) {
+            $('#'+modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            document.getElementById("deleteModalMessage").innerHTML = "<i class='fa fa-exclamation fa-1x'></i> " + message;
+            $('#businessObjectID').val(itemId);
+        }
+
+        function gotoDeleteBo() {
+            var boVMID = $('#businessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/Admin/' + controllerName + '/Delete/' + boVMID,
+                beforeSend: function () {
+                }
+            }).done(function (delStatus) {
+                if (delStatus.deleteSatus === true) {
+                    $('#deleteItemModal').modal('hide')
+                    window.location.href = "/Admin/" + controllerName + "/Index";
+                } else {
+                    document.getElementById("deleteModalErrMessage").innerText = delStatus.message;
+                }
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+        // 打开设置部门用户组会话框
+        function openCommonOperationModal(id) {
+            $('#commonOperationModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/SetApplicationRole/' + id ,
+                beforeSend: function () {
+                    // alert("开始访问");
+                }
+            }).done(function (data) {
+                document.getElementById("commonOperationModalPartial").innerHTML = data;
+            }).fail(function () {
+                alert("编辑数据连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        // 提交设置部门角色数据
+        function submitCommonOperationForm() {
+            var commonOperationFormOptions = {
+                success: function (data) {
+                    document.getElementById("commonOperationModalPartial").innerHTML = data;
+                    // 提取返回的会话框中保存结果状态
+                    var saveStatus = $('#SaveStatus').val();
+                    if (saveStatus == "OK") {
+                        // 提取返回模态框中的数据
+                        var itemName  = $('#RoleName').val();
+                        var itemId    = $('#DepartmentId').val();
+                        var itemDivId = 'R_' + itemId;
+                        // 刷新显示区
+                        document.getElementById(itemDivId).innerHTML = "<a href='javascript:void(0)' onclick='openCommonOperationModal(\"" + itemId + "\")'> <i class='fa fa-edit'></i> </a>" + itemName;
+                        // 关闭会话框
+                        closeCommonOperationModal();
+                    }
+                }
+            };
+            $('#commonOperationForm').ajaxSubmit(commonOperationFormOptions);
+        }
+
+        // 关闭用户组设置会话框
+        function closeCommonOperationModal() {
+            $('#commonOperationModal').modal('hide'); 
+        }
+
+
+    </script>
+}

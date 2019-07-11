@@ -1,0 +1,75 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemContentVM
+@{
+    Layout = "_LeraningAreaLayout";
+
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-3" id="navigatorPalceArea">
+        <div class="x_title">
+            <h3>@ViewData["CourseName"]</h3>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- 作为 boor-tree 插件使用-->
+        <div id="navigatorTreeView"></div>
+
+    </div>
+    <div class="col-sm-9" id="mainWorkPlaceArea">
+        <partial name="_CourseItemContentDetail" model="@Model" />
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+
+        // 初始化课程单元导航树
+        $(function () {
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '../../'+controllerName+'/TreeViewData/' + '@ViewData["CourseId"]',
+                beforeSend: function () {
+                }
+            }).done(function (dataReusult) {
+                // 使用 boot-treeview 插件
+                $('#navigatorTreeView').treeview({
+                    data: dataReusult,
+                    onNodeSelected: function (event, node) {
+                        gotoCourseItemContentEditPage(node.id);
+                    }
+                });
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        });
+
+        // 根据课程单元导航树跳转编辑内容
+        function gotoCourseItemContentEditPage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '../../' + controllerName+'/CourseItemContentDetailPartial/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                initialDescription();
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+
+        }
+
+
+    </script>
+}

@@ -1,0 +1,314 @@
+﻿@model ELearning.ViewModels.UserAndRole.ApplicationUserVM
+@{
+    var avatar = ViewData["AvatrVM"] as ELearning.ViewModels.Common.BusinessImageVM;
+    var passwordResetor = ViewData["ApplicationUserPasswordResetVM"] as ELearning.ViewModels.UserAndRole.ApplicationUserPasswordResetVM;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <span class="mb-2 h4" style="color:dimgray">头像</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content text-center">
+                                @if (!String.IsNullOrEmpty(Model.AvatarPath))
+                                {
+                                    <img id="userAvatar" src="../..@Model.AvatarPath" class="img-thumbnail img-circle " width="130" />
+                                }
+                                else
+                                {
+                                    <img id="userAvatar"  src="/uploadFiles/avatars/defaultAvatar.jpg img-circle " class="img-thumbnail" width="130" />
+                                }
+                                <br/><br/>
+                                <button class="btn btn-primary" onclick="openUploadModal('commonBusinessImagesSelectorModal', '@Model.Id')" > <i class="fa fa-user"></i> 更新个人头像</button>
+                            </div>
+                        </div>
+                        <div id="resetPasswordArea">
+                            <partial name="_ApplicationUserPasswordReset" model="@passwordResetor" />
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <span class="mb-2 h4" style="color:dimgray">@Model.Name</span>
+                                <small>@Model.PersonOrganizationName</small>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <form id="boVM_CreateOrEdit" asp-area="" asp-controller="" asp-action="" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                                    <!-- 隐藏的元素 -->
+                                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                                    <input type="hidden" id="Password" name="Password" value="1234%Abcd" />
+                                    <input type="hidden" id="PasswordComfirm" name="PasswordComfirm" value="1234%Abcd" />
+
+                                    <!-- 用户名 -->
+                                    <div class="item form-group">
+                                        <label asp-for="UserName" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" id="UserName" name="UserName" placeholder="请输入用户名" value="@Model.UserName" required disabled>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            <span asp-validation-for="UserName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 电子邮件 -->
+                                    <div class="item form-group">
+                                        <label asp-for="Email" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" id="Email" name="Email" placeholder="请输入电子邮件" value="@Model.Email" required disabled>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            @*<a href="javaScript:void(0)" onclick=""><i class="fa fa-edit"></i></a>*@
+                                        </div>
+                                    </div>
+
+                                    <!-- 显示名 -->
+                                    <div class="item form-group">
+                                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" id="Name" name="Name" placeholder="请输入显示名称" value="@Model.Name" required>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            <a href="javaScript:void(0)" onclick="editDisplayName('@Model.Id')"><i class="fa fa-edit"></i></a>
+                                            <span id="NameTip"></span>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- 移动电话输入 -->
+                                    <div class="item form-group">
+                                        <label asp-for="MobileNumber" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" id="MobileNumber" name="MobileNumber" placeholder="请输入手机号码" value="@Model.MobileNumber" required>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            <a href="javaScript:void(0)" onclick="editMobileNumber('@Model.Id')"><i class="fa fa-edit"></i></a>
+                                            <span id="MobileNumberTip"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 选择用户归属的角色组：多重选择 -->
+                                    <div class="item form-group">
+                                        <label asp-for="ApplicationRoleItemIdCollection" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @foreach (var item in Model.ApplicationRoleItemCollection)
+                                            {
+                                                var status = "";
+                                                if (item.IsActive)
+                                                {
+                                                    status = "checked";
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="@item.ID" id="ApplicationRoleItemIdCollection" name="ApplicationRoleItemIdCollection" disabled @status >
+                                                        <label class="form-check-label" for="RoleItemIDCollection">@item.Name</label>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12" style="margin-top:8px">
+                                            <span asp-validation-for="ApplicationRoleItemIdCollection" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 简要说明 -->
+                                    <div class="item form-group">
+                                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea class="resizable_textarea form-control" rows="6" id="Description" name="Description" placeholder="修改个人简要说明...">@Model.Description</textarea>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            <a href="javaScript:void(0)" onclick="editDescription('@Model.Id')"><i class="fa fa-edit"></i></a>
+                                            <span id="DescriptionTip"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 联系地址 -->
+                                    <div class="item form-group">
+                                        <label asp-for="PersonAddress" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <textarea class="resizable_textarea form-control" rows="3" id="PersonAddress" name="PersonAddress" placeholder="修改个人联系地址...">@Model.PersonAddress</textarea>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12" style="margin-top:8px">
+                                            <a href="javaScript:void(0)" onclick="editPersonAddress('@Model.Id')"><i class="fa fa-edit"></i></a>
+                                            <span id="PersonAddressTip"></span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 单一图像上传选择器会话框 -->
+<partial name="_CommonBusinessImagesSelectorModal" />
+
+
+@section Scripts{
+    <script>
+        // 重置密码
+        function submitApplicationUserPasswordResetForm() {
+            var resetPaswordFormOptions = {
+                success: function (data) {
+                    document.getElementById("resetPasswordArea").innerHTML = data;
+                }
+            };
+            $('#ApplicationUserPasswordResetForm').ajaxSubmit(resetPaswordFormOptions);
+        }
+
+        // 初始化通过 <partial name="_CommonBusinessImagesSelectorModal" /> 定义的上传文件对话框
+        $("#commonBusinessImagesSelector").fileinput({
+            language: "zh",
+            uploadUrl: "/Admin/UploadFiles/AvatarSave",
+            maxFileCount: 1,
+            minFileCount: 1,
+            uploadAsync: true,
+            showCaption: true,
+            showPreview: true,
+            initialCaption: "请选择上传头像图片",
+            uploadExtraData: function () {
+                var idValue = $('#relBusinessObjectID').val();
+                return { id: idValue };
+            }
+        });
+
+        // 打开上传文件会话框
+        function openUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#relBusinessObjectID').val(itemId);
+        }
+
+        // 处理上传个人图片后，刷新
+        function closeCommonBusinessImagesSelectorModal()
+        {
+            // 关闭会话框
+            $('#commonBusinessImagesSelectorModal').modal('hide'); 
+            var id = $('#relBusinessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/ApplicationUser/RefreshUserAvatar/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                var avataId = document.getElementById("userAvatar");
+                avataId.setAttribute("src", data);
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+    // 修改显示名
+    function editDisplayName(id) {
+        var editValue = $('#Name').val();
+        $.ajax({
+            cache: false,
+            type: 'post',
+            async: true,
+            url: '/TeacherDesktop/TeacherProfile/EditDisplayName/' + id +'?valString='+editValue,
+            beforeSend: function () {
+                    document.getElementById("NameTip").innerHTML = "<i class='fa fa-spinner fa-pulse'></i>";
+            }
+        }).done(function (data) {
+            if (data === true) {
+                document.getElementById("NameTip").innerHTML = '<i class="fa fa-check text-info"></i>';
+                } else {
+                    document.getElementById("NameTip").innerHTML = '<i class="fa fa-times text-danger"></i>';
+                }
+        }).fail(function () {
+            alert("连接后台失败！");
+        }).always(function () {
+        });
+    }
+
+    // 修改手机
+    function editMobileNumber(id) {
+        var editValue = $('#MobileNumber').val();
+        $.ajax({
+            cache: false,
+            type: 'post',
+            async: true,
+            url: '/TeacherDesktop/TeacherProfile/EditMobileNumber/' + id +'?valString='+editValue,
+            beforeSend: function () {
+                    document.getElementById("MobileNumberTip").innerHTML = "<i class='fa fa-spinner fa-pulse'></i>";
+            }
+        }).done(function (data) {
+            if (data === true) {
+                document.getElementById("MobileNumberTip").innerHTML = '<i class="fa fa-check text-info"></i>';
+                } else {
+                    document.getElementById("MobileNumberTip").innerHTML = '<i class="fa fa-times text-danger"></i>';
+                }
+        }).fail(function () {
+            alert("连接后台失败！");
+        }).always(function () {
+        });
+    }
+
+    // 修改简要说明
+    function editDescription(id) {
+        var editValue = $('#Description').val();
+        $.ajax({
+            cache: false,
+            type: 'post',
+            async: true,
+            url: '/TeacherDesktop/TeacherProfile/EditDescription/' + id +'?valString='+editValue,
+            beforeSend: function () {
+                    document.getElementById("DescriptionTip").innerHTML = "<i class='fa fa-spinner fa-pulse'></i>";
+            }
+        }).done(function (data) {
+            if (data === true) {
+                document.getElementById("DescriptionTip").innerHTML = '<i class="fa fa-check text-info"></i>';
+                } else {
+                    document.getElementById("DescriptionTip").innerHTML = '<i class="fa fa-times text-danger"></i>';
+                }
+        }).fail(function () {
+            alert("连接后台失败！");
+        }).always(function () {
+        });
+    }
+
+    // 修改联系地址
+    function editPersonAddress(id) {
+        var editValue = $('#PersonAddress').val();
+        $.ajax({
+            cache: false,
+            type: 'post',
+            async: true,
+            url: '/TeacherDesktop/TeacherProfile/EditPersonAddress/' + id +'?valString='+editValue,
+            beforeSend: function () {
+                    document.getElementById("PersonAddressTip").innerHTML = "<i class='fa fa-spinner fa-pulse'></i>";
+            }
+        }).done(function (data) {
+            if (data === true) {
+                document.getElementById("PersonAddressTip").innerHTML = '<i class="fa fa-check text-info"></i>';
+                } else {
+                    document.getElementById("PersonAddressTip").innerHTML = '<i class="fa fa-times text-danger"></i>';
+                }
+        }).fail(function () {
+            alert("连接后台失败！");
+        }).always(function () {
+        });
+    }
+
+    </script>
+}

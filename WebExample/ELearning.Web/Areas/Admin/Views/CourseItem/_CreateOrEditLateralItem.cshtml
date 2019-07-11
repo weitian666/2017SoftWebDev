@@ -1,0 +1,108 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a href="javascript:void(0)" onclick="closeopenCreateOrEditModal('')" class="pull-right btn btn-danger"><i class="fa fa-times"></i></a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="boVM_CreateOrEdit" asp-area="Admin" asp-controller="@entityController" asp-action="CreateOrEdit" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseId" />
+                    <input type="hidden" id="ParentCourseItemId" name="ParentCourseItemId" value="@Model.ParentCourseItemId" />
+
+                    <!-- 上级节点 - 带层次的下拉 -->
+                    <div class="item form-group">
+                        <label asp-for="ParentCourseItemId" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <select class="form-control" id="" name="" aria-describedby="parentItemHelpBlock"  disabled>
+                                <option value=""> </option>
+                                @foreach (var item in Model.ParentCourseItemCollection)
+                                {
+                                    if (item.ID == Model.ParentCourseItemId)
+                                    {
+                                        <option value="" selected>@item.DisplayName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="">@item.DisplayName</option>
+                                    }
+                                }
+                            </select>
+                            <small id="parentItemHelpBlock" class="form-text text-muted">
+                                如果置空，意味着将当前条目作为结构树的根节点元素使用。
+                            </small>
+                        </div>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="ParentCourseItemId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 名称 -->
+                    <div class="item form-group">
+                        <label asp-for="Name" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" class="form-control col-md-10 col-xs-12" id="Name" name="Name" placeholder="请输入单元名称" value="@Model.Name" required>
+                        </div>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 编码 -->
+                    <div class="item form-group">
+                        <label asp-for="SortCode" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="SortCode" name="SortCode" placeholder="请输入单元组编码" value="@Model.SortCode" required>
+                        </div>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="SortCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 简要说明 -->
+                    <div class="item form-group">
+                        <label asp-for="Description" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <textarea class="resizable_textarea form-control" rows="3" id="Description" name="Description" placeholder="请输入简要说明...">@Model.Description</textarea>
+                        </div>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="button" class="btn btn-primary" onclick="submitCreateOrEditForm()"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 临时存放的一个状态变量，用于判断存储是否成功 -->
+<input type="hidden" id="SaveStatus" value="@Model.SaveStatus" />

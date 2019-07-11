@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ELearning.ViewModels.UserAndRole.ApplicationRoleVM>
+@{
+}
+
+<div class="x_title">
+<h3>系统用户角色组</h3>
+<div class="clearfix"></div>
+</div>
+
+@foreach (var item in Model)
+{
+    <a href="javascript:void(0)" onclick="gotoTypePage('@item.Id')">
+        <div class="mail_list">
+        <div class="left">
+            <i class="fa fa-circle"></i> 
+        </div>
+        <div class="right">
+            <h3>@item.Name <small>用户数量:@item.UserAmount</small></h3>
+            <p>@item.Description</p>
+        </div>
+        </div>
+    </a>
+}

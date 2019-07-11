@@ -1,0 +1,34 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseAuthorizationSelectorVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+    var tabName = Model.AuthorizationType.ToString() + "_CourseAuthorizationTypeTab";
+    var titleName = Model.AuthorizationTypeForCourseCollection.Where(x => x.AuthorizationType == Model.AuthorizationType).FirstOrDefault().AuthorizationTypeDisplayName;
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="x_panel" style="background-color:whitesmoke;border-bottom:solid;border-left:none;border-right:none;border-top:none">
+            <span class="mb-2 h4" style="color:dimgray;margin-top:7px"> @titleName 授权分配 </span>
+            <ul class="nav navbar-right panel_toolbox" style="height:12px;margin-top:-5px">
+                <li>
+                    <a href="javascript:void(0)" onclick="gotoAuthorizationTypeItemsList('@Model.CourseID','@Model.AuthorizationType','@tabName')" style="color:dimgray"><i class="fa fa-check"></i> 完成 </a> &nbsp;
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 待选元素 -->
+    <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+            <partial name="_ToBeAuthorizationedItemsList" model="@Model" />
+        </div>
+    </div>
+    <!-- 已选元素 -->
+    <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+            <partial name="_BeAuthorizationedItemsList" model="@Model" />
+        </div>
+    </div>
+</div>

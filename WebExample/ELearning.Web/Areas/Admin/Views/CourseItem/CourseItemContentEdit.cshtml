@@ -1,0 +1,241 @@
+﻿@model ELearning.ViewModels.TeachingCourse.CourseItemContentVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-2" id="navigatorPalceArea">
+        <div class="x_title">
+            <h3>@ViewData["CourseName"]</h3>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- 作为 boor-tree 插件使用-->
+        <div id="navigatorTreeView"></div>
+
+    </div>
+    <div class="col-sm-10" id="mainWorkPlaceArea">
+        <partial name="_CourseItemContentEdit" model="@Model" />
+    </div>
+</div>
+
+<!-- 上传选择器会话框 -->
+<partial name="_CommonBusinessVideoesSelectorModal" />
+<partial name="_CommonBusinessImagesSelectorModal" />
+<partial name="_CommonBusinessFilesSelectorModal" />
+
+
+@section Scripts{
+    <script>
+        // 提取控制器名称
+        var controllerName = "@ViewContext.RouteData.Values["controller"].ToString()";
+        // 提取当前视图模型对象 Id
+        var boVMId = "@Model.Id";
+        // 初始化课程单元导航树
+        $(function () {
+            $.ajax({
+                cache: false,
+                type: 'post',
+                async: false,
+                url: '/Admin/'+controllerName+'/TreeViewData/' + '@ViewData["CourseId"]',
+                beforeSend: function () {
+                }
+            }).done(function (dataReusult) {
+                // 使用 boot-treeview 插件
+                $('#navigatorTreeView').treeview({
+                    data: dataReusult,
+                    onNodeSelected: function (event, node) {
+                        gotoCourseItemContentEditPage(node.id);
+                    }
+                });
+
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        });
+
+        // 初始化文本编辑器
+        $(document).ready(function () {
+            $("#Description").summernote({
+                height: 200,
+                lang:"zh-CN"
+            });
+        });
+
+        // 初始化视频文件上传控件
+        $("#commonBusinessVideoesSelector").fileinput({
+            language: "zh",
+            uploadUrl: "/Admin/UploadFiles/VideoSave",
+            maxFileCount: 1,
+            minFileCount: 1,
+            uploadAsync: true,
+            showCaption: true,
+            showPreview: true,
+            initialCaption: "请选择上传视频文件",
+            uploadExtraData: function () {
+                var idValue = $('#videoesRelBusinessObjectID').val();
+                return { id: idValue };
+            }
+        });
+
+        // 初始化图片文件上传控件
+        $("#commonBusinessImagesSelector").fileinput({
+            language: "zh",
+            uploadUrl: "/Admin/UploadFiles/ImageSave",
+            maxFileCount: 6,
+            minFileCount: 1,
+            uploadAsync: true,
+            showCaption: true,
+            showPreview: true,
+            initialCaption: "请选择上传图片文件",
+            uploadExtraData: function () {
+                var idValue = $('#relBusinessObjectID').val();
+                return { id: idValue };
+            }
+        });
+
+        // 初始化其它文件上传控件
+        $("#commonBusinessFilesSelector").fileinput({
+            language: "zh",
+            uploadUrl: "/Admin/UploadFiles/FilesSave",
+            maxFileCount: 6,
+            minFileCount: 1,
+            uploadAsync: true,
+            showCaption: true,
+            showPreview: true,
+            initialCaption: "请选择上传普通文件",
+            uploadExtraData: function () {
+                var idValue = $('#filesRelBusinessObjectID').val();
+                return { id: idValue };
+            }
+        });
+
+        // 根据课程单元导航树跳转编辑内容
+        function gotoCourseItemContentEditPage(id) {
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/CourseItemContentEditPartial/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                initialDescription();
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+
+        }
+
+        // 使用 ajax 提交新建人员 form 数据
+        function submitCreateOrEditForm() {
+            var objectCreateFormOptions = {
+                success: function (data) {
+                    document.getElementById("mainWorkPlaceArea").innerHTML = data;
+                    initialDescription();
+                }
+            };
+            $('#boVM_CreateOrEdit').ajaxSubmit(objectCreateFormOptions);
+        }
+
+        // 初始化文本编辑器
+        function initialDescription(){
+            $("#Description").summernote({
+                height: 200,
+                lang:"zh-CN"
+            });
+        }
+
+        // 打开上传视频文件会话框
+        function openVideoUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#videoesRelBusinessObjectID').val(itemId);
+        }
+        // 刷新视频区域
+        function closeCommonBusinessVideosSelectorModal() {
+            $('#commonBusinessVideoesSelectorModal').modal('hide');
+            var id = $('#videoesRelBusinessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/RefreshCourseItemContentVideo/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("courseItemContentVideo").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+
+        }
+
+        // 打开上传图片文件会话框
+        function openImagesUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#relBusinessObjectID').val(itemId);
+        }
+        function closeCommonBusinessImagesSelectorModal() {
+            // 关闭会话框
+            $('#commonBusinessImagesSelectorModal').modal('hide'); 
+            // 刷新上传文件的处理清单
+
+        }
+
+        // 打开上传其它文件会话框
+        function openFileUploadModal(modalId, itemId) {
+            $('#' + modalId).modal({
+                show: true,
+                backdrop: 'static'
+            })
+            $('#filesRelBusinessObjectID').val(itemId);
+        }
+        function closeCommonBusinessFilesSelectorModal() {
+            $('#commonBusinessFilesSelectorModal').modal('hide');
+            var id = $('#filesRelBusinessObjectID').val();
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName+'/RefreshCourseItemContentFiles/' + id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("courseItemContentFile").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+        }
+
+        function deleteFilesAndRefresh(id)
+        {
+
+            $.ajax({
+                cache: false,
+                type: 'get',
+                async: false,
+                url: '/Admin/' + controllerName + '/DeleteFilesAndRefresh/' + boVMId + "?businessFileId="+id,
+                beforeSend: function () {
+                }
+            }).done(function (data) {
+                document.getElementById("courseItemContentFile").innerHTML = data;
+            }).fail(function () {
+                alert("连接后台失败！");
+            }).always(function () {
+            });
+
+        }
+
+    </script>
+}

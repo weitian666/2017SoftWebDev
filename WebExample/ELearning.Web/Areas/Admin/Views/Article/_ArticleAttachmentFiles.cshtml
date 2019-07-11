@@ -1,0 +1,15 @@
+﻿@model IEnumerable<ELearning.ViewModels.Common.BusinessFileVM>
+
+<table class="countries_list">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="@item.FilePath"> @item.FileName </a> </td>
+                <td class="fs15 fw700 text-right">
+                    <a href="javascript:void()" onclick="deleteFilesAndRefresh('@ViewData["BoVMId"]','@item.Id')"> 删除 </a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

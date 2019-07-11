@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ELearning.ViewModels.News.ArticleTopicVM>
+@{
+}
+
+<div class="x_title">
+<h3>文章栏目</h3>
+<div class="clearfix"></div>
+</div>
+
+@foreach (var item in Model)
+{
+    <a href="javascript:void(0)" onclick="gotoTypePage('@item.Id')">
+        <div class="mail_list">
+        <div class="left">
+            <i class="fa fa-circle"></i> 
+        </div>
+        <div class="right">
+            <h3>@item.Name <small>文章数量:@item.ArticleAmount</small></h3>
+            <p>@item.Description</p>
+        </div>
+        </div>
+    </a>
+}

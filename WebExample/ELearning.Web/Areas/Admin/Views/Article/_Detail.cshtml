@@ -1,0 +1,72 @@
+﻿@model ELearning.ViewModels.News.ArticleVM
+@using ELearning.Web.Helpers
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="x_panel" style="background-color:whitesmoke;border-bottom:solid;border-left:none;border-right:none;border-top:none">
+            <span class="mb-2 h4" style="color:dimgray;margin-top:7px">@ViewData["FunctionName"]</span>
+            <ul class="nav navbar-right panel_toolbox" style="height:12px;margin-top:-5px">
+                <li>
+                    <a href="javascript:void(0)" onclick="gotoTypePage('@Model.TopicItemId')" style="color:dimgray"><i class="fa fa-check green"></i> 退出预览 </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-right panel_toolbox">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="col-sm-12">
+                <div class="x_title">
+                    <h3 class="text-center">@Model.Name</h3>
+                    @if (!String.IsNullOrEmpty(Model.ArticleSecondTitle))
+                    {
+                        <p class="text-center">@Model.ArticleSecondTitle</p>
+                    }
+                    <div class="clearfix"></div>
+                </div>
+                <div id="courseItemContentEditor" class="x_content">
+                    @if (!String.IsNullOrEmpty(Model.Description))
+                    {
+                        <blockquote>
+                            <p>@Model.Description</p>
+                        </blockquote>
+                    }
+
+                    <div class="clearfix"></div>
+                    <div>
+                        @Html.SetHtml(@Model.ArticleContent)
+                    </div>
+                </div>
+                <hr />
+                <br /><br /><br />
+                @if (Model.FileCollection != null)
+                {
+                    if (Model.FileCollection.Count > 0)
+                    {
+                        <div class="x_title">
+                            <h4>附件</h4>
+                        </div>
+                        <table class="countries_list x_content">
+                            <tbody>
+                                @foreach (var item in Model.FileCollection)
+                                {
+                                    <tr>
+                                        <td><a href="../../@item.FilePath"> @item.FileName </a> </td>
+                                        <td class="fs15 fw700 text-right"></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

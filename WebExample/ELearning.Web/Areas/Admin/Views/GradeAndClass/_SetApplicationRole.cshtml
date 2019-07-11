@@ -1,0 +1,73 @@
+﻿@model ELearning.Web.Areas.Admin.Models.CreateOrEditRoleWithDepartmentVM
+@{
+    var entityController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <span class="mb-2 h3" style="color:dimgray">@ViewData["FunctionName"]</span>
+                <div class="col-md-5 col-sm-5 col-xs-12 pull-right ">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <a href="javascript:void(0)" onclick="closeCommonOperationModal('')" class="pull-right btn btn-danger"><i class="fa fa-times"></i></a>
+                        </span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <form id="commonOperationForm" asp-area="Admin" asp-controller="@entityController" asp-action="SetApplicationRole" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+
+                    <!-- 隐藏的元素 -->
+                    <input type="hidden" id="DepartmentId" name="DepartmentId" value="@Model.DepartmentId" />
+                    <input type="hidden" id="RoleId" name="RoleId" value="@Model.RoleId" />
+
+                    <!-- 名称 -->
+                    <div class="item form-group">
+                        <label asp-for="RoleName" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" class="form-control col-md-10 col-xs-12" id="RoleName" name="RoleName" placeholder="请输入用户组名称" value="@Model.RoleName" required aria-describedby="roleNameHelpBlock">
+                        </div>
+                        <small id="roleNameHelpBlock" class="form-text text-muted pull-right" style="color:red">
+                            如果没有什么特殊的原因，请直接使用班级名称作为用户组名称！
+                        </small>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- 名称 -->
+                    <div class="item form-group">
+                        <label asp-for="DepartmentName" class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" class="form-control col-md-10 col-xs-12" id="DepartmentName" name="DepartmentName" placeholder="请输入用户组名称" value="@Model.DepartmentName" readonly>
+                        </div>
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button type="button" class="btn btn-primary" onclick="submitCommonOperationForm()"><i class="fa fa-send"></i> 提交数据</button>
+                            <button type="reset" class="btn btn-success"><i class="fa fa-refresh"></i> 重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 临时存放的一个状态变量，用于判断存储是否成功 -->
+<input type="hidden" id="SaveStatus" value="@Model.SaveStatus" />
+@if (Model.SaveStatus != "OK")
+{
+    <div> 数据处理错误：已经存在与你提交的用户名相同的名称了。</div>
+}
